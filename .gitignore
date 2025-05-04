@@ -2,3 +2,5 @@ composer.phar
 /vendor/
 config.php
 /output/*.json
+/output/*.md
+/games/*.json
