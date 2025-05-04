@@ -141,8 +141,8 @@ function exportGame(string $game, array $modsData, array $categoriesData) : void
         ->setTrailingNewline(true)
         ->setPrettyPrint(true)
         ->putData(array(
-            'exportDate' => Microtime::createNow()->getISODate(true),
             'game' => $game,
+            'exportDate' => Microtime::createNow()->getISODate(true),
             'categories' => $categories,
             'tags' => $tags,
             'mods' => $mods
