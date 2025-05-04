@@ -1,0 +1,163 @@
+{
+  "label": "Cyberpunk 2077",
+  "tagDefinitions": {
+    "AMM": {
+      "label": "Appearance Menu Mod",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/790",
+      "requires": [
+        "CET",
+        "Codeware"
+      ]
+    },
+    "ArchiveXL": {
+      "label": "ArchiveXL",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/4198",
+      "requires": [
+        "Red4Ext"
+      ]
+    },
+    "Atelier": {
+      "label": "Virtual Atelier",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/2987",
+      "requires": [
+        "ArchiveXL",
+        "BrowserExt",
+        "Codeware",
+        "ModSettings",
+        "Red4Ext",
+        "RedScript"
+      ]
+    },
+    "BrowserExt": {
+      "label": "Browser Extension",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/10038",
+      "requires": [
+        "Codeware",
+        "Red4Ext",
+        "RedScript"
+      ]
+    },
+    "CET": {
+      "label": "Cyber Engine Tweaks",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/107",
+      "requires": []
+    },
+    "CPAL": {
+      "label": "Community Palette Project",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/10437",
+      "requires": []
+    },
+    "CarDealer": {
+      "label": "Virtual Car Dealer",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/4454",
+      "requires": [
+        "ArchiveXL",
+        "BrowserExt",
+        "Codeware",
+        "Red4Ext",
+        "RedScript",
+        "TweakXL"
+      ]
+    },
+    "Codeware": {
+      "label": "Codeware",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/7780",
+      "requires": [
+        "Red4Ext"
+      ]
+    },
+    "CookedApps": {
+      "label": "Cooked Apps Nulled",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/3051",
+      "requires": []
+    },
+    "EQEX": {
+      "label": "Equipment-EX",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/6945",
+      "requires": [
+        "ArchiveXL",
+        "Codeware",
+        "Red4Ext",
+        "RedScript",
+        "TweakXL"
+      ]
+    },
+    "MIBL": {
+      "label": "Microblend Resource",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/4571",
+      "requires": []
+    },
+    "MPTL": {
+      "label": "Military Palette Texture Library",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/16356",
+      "requires": [
+        "ArchiveXL",
+        "Red4Ext",
+        "TweakXL"
+      ]
+    },
+    "MatEX": {
+      "label": "Multi-Material extender",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/5570",
+      "requires": []
+    },
+    "ModSettings": {
+      "label": "Mod Settings",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/4885",
+      "requires": [
+        "ArchiveXL",
+        "Red4Ext",
+        "RedScript"
+      ]
+    },
+    "NativeSettings": {
+      "label": "Native Settings UI",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/3518",
+      "requires": [
+        "CET"
+      ]
+    },
+    "NoPaperBags": {
+      "label": "No Paper Bags",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/8387",
+      "requires": [
+        "CET"
+      ]
+    },
+    "PMU": {
+      "label": "Photo Mode Unlocker",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/4319",
+      "requires": [
+        "ArchiveXL",
+        "Red4Ext",
+        "TweakXL"
+      ]
+    },
+    "Red4Ext": {
+      "label": "RedScript 4 Extender",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/2380",
+      "requires": []
+    },
+    "RedScript": {
+      "label": "Red engine scripting language",
+      "requires": []
+    },
+    "TexOverride": {
+      "label": "Texture Override",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/5266",
+      "requires": []
+    },
+    "TweakXL": {
+      "label": "TweakXL",
+      "url": "https://www.nexusmods.com/cyberpunk2077/mods/4197",
+      "requires": [
+        "Red4Ext"
+      ]
+    },
+    "UniqueEyes": {
+      "label": "Unique Eyes",
+      "url": "https://nexusmods.com/cyberpunk2077/mods/1937",
+      "requires": []
+    }
+  }
+}

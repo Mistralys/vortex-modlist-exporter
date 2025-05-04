@@ -16,13 +16,24 @@ the mods.
 2. Run `composer install` to install the dependencies
 3. Copy the `config.dist.php` file to `config.php`
 4. Edit the config settings
+5. Create a game config (see below)
+
+## Create a game config
+
+Only games for which a configuration exist are processed.
+The configuration is a JSON file that contains the necessary
+information on the game and optional tag definitions. 
+
+1. Create the game file under `games/game-name.json`
+2. Use the example file for [Cyberpunk 2077](./games/examples/cyberpunk2077.json) as a template
 
 ## Usage
 
 1. Open Vortex
 2. Go to Settings > Workarounds
 3. In the "Database Backup" section, click "Create Backup"
-4. Run `php export-modlist.php` to generate the mod list
+4. Run `php bin/export-modlist.php` to generate the mod list
+5. Run `php bin/generate-docs.php` to generate the Markdown files
 
 You will find the export files in the `output` directory.
 
