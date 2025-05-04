@@ -17,31 +17,21 @@ declare(strict_types=1);
 
 namespace Mistralys\VortexModExporter;
 
+require_once __DIR__.'/prepend.php';
+
 use AppUtils\FileHelper\JSONFile;
 use AppUtils\Microtime;
-
-$autoloadFile = __DIR__.'/vendor/autoload.php';
-$configFile = __DIR__.'/config.php';
-
-if(!file_exists($configFile)) {
-    die('Please copy config.dist.php to config.php and set the necessary settings.'.PHP_EOL);
-}
-
-if(!file_exists($autoloadFile)) {
-    die('Please run "composer install" to install the required dependencies.'.PHP_EOL);
-}
-
-require_once $autoloadFile;
-require_once $configFile;
-
-if(!is_dir(VORTEX_APPDATA_FOLDER)) {
-    die('Vortex AppData folder not found, please check that the setting points to the correct path.'.PHP_EOL);
-}
+use DateTime;
 
 $file = JSONFile::factory(VORTEX_APPDATA_FOLDER.'/temp/state_backups_full/manual.json');
 
 if(!$file->exists()) {
     die('Vortex backup file not found. Have you made a manual database export from the interface?'.PHP_EOL);
+}
+
+$date = $file->getModifiedDate();
+if($date === null) {
+    die('The backup file does not have a valid date. Please make sure you are using the correct file.' . PHP_EOL);
 }
 
 $data = $file->getData();
@@ -50,22 +40,25 @@ if(!isset($data['persistent']['mods'])) {
     die('The mods storage key way not found in the database backup file.' . PHP_EOL);
 }
 
-$games = EXPORT_GAMES;
-if(empty($games)) {
-    $games = array_keys($data['persistent']['mods']);
-}
-
-foreach($games as $game) {
-    echo 'Game: ' . $game . PHP_EOL;
-    if(!isset($data['persistent']['mods'][$game])) {
-        die(sprintf('ERROR: The game [%s] was not found in the database backup file.', $game) . PHP_EOL);
+foreach(Games::getInstance()->getAll() as $game) {
+    $gameID = $game->getVortexID();
+    echo 'Game: ' . $gameID . PHP_EOL;
+    if(!isset($data['persistent']['mods'][$gameID])) {
+        die(sprintf('ERROR: The game [%s] was not found in the database backup file.', $gameID) . PHP_EOL);
     }
 
-    exportGame($game, $data['persistent']['mods'][$game], $data['persistent']['categories'][$game] ?? array());
+    exportGame(
+        $game,
+        $date,
+        $data['persistent']['mods'][$gameID],
+        $data['persistent']['categories'][$gameID] ?? array()
+    );
 }
 
-function exportGame(string $game, array $modsData, array $categoriesData) : void
+function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $categoriesData) : void
 {
+    $gameID = $game->getVortexID();
+
     echo sprintf('  - Exporting mod list for [%s] mods...', count($modsData)) . PHP_EOL;
 
     $mods = array();
@@ -84,7 +77,20 @@ function exportGame(string $game, array $modsData, array $categoriesData) : void
         preg_match_all('/\[([^]]+)]/', $name, $matches);
         $modTags = array();
         $cleanName = $name;
-        if (!empty($matches[1])) {
+        if (!empty($matches[1]))
+        {
+            foreach ($matches[0] as $match) {
+                $cleanName = str_replace($match, '', $cleanName);
+            }
+
+            $cleanName = str_replace(array('[', ']', '?'), '', $cleanName);
+
+            $cleanName = trim($cleanName);
+
+            while(str_contains($cleanName, '  ')) {
+                $cleanName = str_replace('  ', ' ', $cleanName);
+            }
+
             $modTags = $matches[1];
             sort($modTags);
             foreach ($matches[1] as $tag) {
@@ -92,31 +98,25 @@ function exportGame(string $game, array $modsData, array $categoriesData) : void
                 if (!isset($tags[$tag])) {
                     $tags[$tag] = array();
                 }
-                $tags[$tag][] = $name;
+                $tags[$tag][] = $cleanName;
             }
-
-            foreach ($matches[0] as $match) {
-                $cleanName = str_replace($match, '', $cleanName);
-            }
-
-            $cleanName = trim($cleanName);
         }
 
-        $category = $categoriesData[$category]['name'] ?? 'Unknown';
+        $category = $categoriesData[$category]['name'] ?? Games::UNKNOWN_CATEGORY_NAME;
 
         if (!isset($categories[$category])) {
             $categories[$category] = array();
         }
 
-        $categories[$category][] = $name;
+        $categories[$category][] = $cleanName;
 
         $mods[$cleanName] = array(
-            'taggedName' => $name,
-            'officialName' => $attribs['modName'] ?? '',
-            'homepage' => $attribs['homepage'] ?? '',
-            'category' => $category,
-            'endorsed' => $attribs['endorsed'] ?? 'Undecided',
-            'tags' => $modTags,
+            Mod::KEY_TAGGED_NAME => $name,
+            Mod::KEY_OFFICIAL_NAME => $attribs['modName'] ?? '',
+            Mod::KEY_HOMEPAGE => $attribs['homepage'] ?? '',
+            Mod::KEY_CATEGORY => $category,
+            Mod::KEY_ENDORSED => $attribs['endorsed'] ?? 'Undecided',
+            Mod::KEY_TAGS => $modTags,
         );
     }
 
@@ -134,18 +134,19 @@ function exportGame(string $game, array $modsData, array $categoriesData) : void
 
     uksort($mods, 'strnatcasecmp');
 
-    $fileName = $game.'.json';
+    $fileName = $gameID.'-modlist.json';
 
-    JSONFile::factory(__DIR__ . '/output/'.$fileName)
+    JSONFile::factory(OUTPUT_FOLDER . '/'.$fileName)
         ->setEscapeSlashes(false)
         ->setTrailingNewline(true)
         ->setPrettyPrint(true)
         ->putData(array(
-            'game' => $game,
-            'exportDate' => Microtime::createNow()->getISODate(true),
-            'categories' => $categories,
-            'tags' => $tags,
-            'mods' => $mods
+            Game::KEY_DATA_GAME => $gameID,
+            Game::KEY_DATA_DATABASE_DATE => Microtime::createFromDate($databaseDate)->getISODate(true),
+            Game::KEY_DATA_EXPORT_DATE => Microtime::createNow()->getISODate(true),
+            Game::KEY_DATA_CATEGORIES => $categories,
+            Game::KEY_DATA_TAGS => $tags,
+            Game::KEY_DATA_MODS => $mods
         ));
 
     echo "  - DONE, saved to " . $fileName . PHP_EOL;
