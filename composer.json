@@ -1,0 +1,25 @@
+{
+  "name": "mistralys/vortex-modlist-exporter",
+  "description": "PHP script to export a Vortex modlist including the renamed mod labels.",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Mordziol",
+      "email": "s.mordziol@mistralys.eu"
+    }
+  ],
+  "autoload": {
+    "classmap": [
+    ]
+  },
+  "require": {
+    "mistralys/application-utils-core": ">=2.3.3",
+    "mistralys/application-utils-collections": ">=1.1.2",
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  }
+}
