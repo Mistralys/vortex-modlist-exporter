@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mistralys\VortexModExporter;
 
 use AppUtils\FileHelper\FileInfo;
+use function AppUtils\parseURL;
 
 require_once __DIR__.'/prepend.php';
 
@@ -51,18 +52,29 @@ function writeGameTagsReference(Game $game) : void
 
     foreach($game->getTagDefs()->getAll() as $tagDef)
     {
+        $modNames = $tagDef->getModNames();
+        if(empty($modNames)) {
+            continue;
+        }
+
         $lines[] = sprintf("## %s\n", resolveTitle($tagDef));
         $lines[] = "\n";
 
+        $desc = $tagDef->getDescription();
+        if(!empty($desc)) {
+            $lines[] = sprintf("%s\n", $desc);
+            $lines[] = "\n";
+        }
+
         $url = $tagDef->getURL();
         if(!empty($url)) {
-            $lines[] = sprintf("This tag is related to a mod. [Go to source](%s)\n", $url);
+            $lines[] = sprintf("This tag is related to a mod. [Mod homepage](%s)\n", $url);
             $lines[] = "\n";
         }
 
         $mods = $game->getMods();
 
-        foreach($tagDef->getModNames() as $modName) {
+        foreach($modNames as $modName) {
             $mod = $mods->getByID($modName);
             $lines[] = sprintf("- [%s](%s)\n", $modName, $mod->getHomepage());
         }
@@ -121,13 +133,15 @@ function writeGameModsReference(Game $game) : void
         $lines[] = sprintf("### %s\n", titleify($mod->getName()));
         $lines[] = "\n";
 
-        $lines[] = sprintf("[Go to source](%s)\n", $mod->getHomepage());
-        $lines[] = "\n";
+        $lines[] = sprintf('Category: %s'.PHP_EOL, $mod->getCategory());
+        $lines[] = sprintf('Homepage: [%s](%s)  '.PHP_EOL, parseURL($mod->getHomepage())->getHost(), $mod->getHomepage());
 
         $tags = $mod->getInheritedTags();
         if (!empty($tags)) {
-            $lines[] = "Tags: `".implode("`, `", $tags)."`\n\n";
+            $lines[] = "Tags: `".implode("`, `", $tags)."`\n";
         }
+
+        $lines[] = "\n";
     }
 
     FileInfo::factory(OUTPUT_FOLDER.'/'.$game->getVortexID().'-mods.md')
