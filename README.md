@@ -24,17 +24,54 @@ Only games for which a configuration exist are processed.
 The configuration is a JSON file that contains the necessary
 information on the game and optional tag definitions. 
 
-1. Create the game file under `games/game-name.json`
-2. Use the example file for [Cyberpunk 2077](./games/examples/cyberpunk2077.json) as a template
+### Create the file
 
-At minimum, the file must contain the human-readable name of 
+Create the configuration file under `games/game-name.json`.
+
+`game-name` is the name that Vortex uses internally. This is usually
+the game's name, lowercase, without spaces. For example: `cyberpunk2077`,
+`reddeadredemption2`.
+
+### Minimum config
+
+At minimum, the file must contain the human-readable name of
 the game:
 
 ```json
 {
-    "label": "Cyberpunk 2077"
+  "label": "Cyberpunk 2077"
 }
 ```
+
+### Export options
+
+Some options can be added to the game config to control what
+is included in the export. The following options are available:
+
+- `ignoreDateTags` - Ignore tags that contain a date. This is useful
+  for tags that are used to track mod updates, but are not relevant
+  for the export.
+- `ignoreUnknownCategory` - Ignore mods that do not have a category
+  assigned. 
+
+```json
+{
+  "label": "Cyberpunk 2077",
+  "options": {
+    "ignoreDateTags": true,
+    "ignoreUnknownCategory": true
+  }
+}
+```
+
+### Tag definitions
+
+The tags that you use to categorize your mods can be described in
+detail in the configuration file. This way, the generated files will
+be self-documenting.
+
+Have a look at the example file for [Cyberpunk 2077](./games/examples/cyberpunk2077.json)
+which contains a detailed tagging setup.
 
 ## Usage
 
@@ -44,7 +81,9 @@ the game:
 4. Run `php bin/export-modlist.php` to generate the mod list
 5. Run `php bin/generate-docs.php` to generate the Markdown files
 
-You will find the export files in the `output` directory.
+You will find the export files in the `output` directory. 
+Some examples of what the script generates can be found 
+in the [examples](./output/examples) folder.
 
 > **Note:** Re-export the database in Vortex after you've
 > done changes, and re-run the script to update the mod list.
