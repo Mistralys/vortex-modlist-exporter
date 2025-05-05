@@ -27,6 +27,15 @@ information on the game and optional tag definitions.
 1. Create the game file under `games/game-name.json`
 2. Use the example file for [Cyberpunk 2077](./games/examples/cyberpunk2077.json) as a template
 
+At minimum, the file must contain the human-readable name of 
+the game:
+
+```json
+{
+    "label": "Cyberpunk 2077"
+}
+```
+
 ## Usage
 
 1. Open Vortex
@@ -64,9 +73,9 @@ quickly identify which mods depend on it.
 
 These are tags I personally use for my mod lists. 
 
-- `[Core]` - Absolute minimum core mods for other mods to work
-- `[Core2]` - Most important mods 
-- `[Core3]` - Important, but mostly optional mods
+- `[Core]` - Absolute minimum core mods needed by other mods to work
+- `[Core2]` - Most important mods that you do not want to play without
+- `[Core3]` - Important mods, but that you can live without
 - `[Vanilla]` - Mod that can run without any other mods
 - `[New]` - New, untested mod
 
