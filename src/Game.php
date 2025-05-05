@@ -19,6 +19,7 @@ class Game implements StringPrimaryRecordInterface
     public const KEY_DATA_DATABASE_DATE = 'databaseDate';
     public const KEY_DEF_LABEL = 'label';
     public const KEY_DEF_TAG_DEFINITIONS = 'tagDefinitions';
+    public const KEY_DEF_OPTIONS = 'options';
 
     private ?ArrayDataCollection $data = null;
     private ?ArrayDataCollection $definition = null;
@@ -54,6 +55,17 @@ class Game implements StringPrimaryRecordInterface
     public function getDatabaseDate() : DateTime
     {
         return $this->getData()->getDateTime(self::KEY_DATA_DATABASE_DATE);
+    }
+
+    private ?GameOptions $options = null;
+
+    public function getOptions() : GameOptions
+    {
+        if(!isset($this->options)) {
+            $this->options = new GameOptions($this->getDefinition()->getArray(self::KEY_DEF_OPTIONS));
+        }
+
+        return $this->options;
     }
 
     public function getDefinitionFile(): JSONFile
