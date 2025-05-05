@@ -22,12 +22,14 @@ class TagDef implements StringPrimaryRecordInterface
      */
     private array $modNames = array();
     private TagDefs $collection;
+    private string $description;
 
-    public function __construct(TagDefs $collection, string $name, string $label, array $requires=array(), ?string $url=null)
+    public function __construct(TagDefs $collection, string $name, string $label, string $description, array $requires=array(), ?string $url=null)
     {
         $this->collection = $collection;
         $this->name = $name;
         $this->label = $label;
+        $this->description = $description;
         $this->requires = $requires;
         $this->url = $url;
     }
@@ -40,6 +42,11 @@ class TagDef implements StringPrimaryRecordInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     public function getLabel(): ?string

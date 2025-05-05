@@ -10,7 +10,7 @@
       ]
     },
     "ArchiveXL": {
-      "label": "ArchiveXL",
+      "label": "",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/4198",
       "requires": [
         "Red4Ext"
@@ -27,6 +27,14 @@
         "Red4Ext",
         "RedScript"
       ]
+    },
+    "BetterClothing": {
+      "description": "Mods to improve the clothing system in general."
+    },
+    "Body": {
+      "label": "",
+      "description": "Body-related mods to improve the skeleton, textures and more.",
+      "requires": []
     },
     "BrowserExt": {
       "label": "Browser Extension",
@@ -47,6 +55,11 @@
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/10437",
       "requires": []
     },
+    "CPMDB": {
+      "label": "Cyberpunk Clothing Mod Database",
+      "description": "These mods are featured in the Cyberpunk clothing mod database project.",
+      "url": "https://aeonoftime.com/?article=2024-08-06-cyberpunk-clothing-mods&page=article"
+    },
     "CarDealer": {
       "label": "Virtual Car Dealer",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/4454",
@@ -58,6 +71,9 @@
         "RedScript",
         "TweakXL"
       ]
+    },
+    "ChooseArchive": {
+      "description": "This mod requires you to choose one of the `.archive` files after\ninstalling it to choose the variant to use."
     },
     "Codeware": {
       "label": "Codeware",
@@ -71,6 +87,15 @@
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/3051",
       "requires": []
     },
+    "Core": {
+      "description": "Absolute minimum core mods needed by other mods to work."
+    },
+    "Core2": {
+      "description": "Most important mods that you do not want to play without."
+    },
+    "Core3": {
+      "description": "Important mods, but that you can live without."
+    },
     "EQEX": {
       "label": "Equipment-EX",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/6945",
@@ -81,6 +106,21 @@
         "RedScript",
         "TweakXL"
       ]
+    },
+    "FallbackInstaller": {
+      "description": "This mod is known to have caused Vortex to use its fallback installer."
+    },
+    "GarmentSupport": {
+      "description": "The items added by this mod come with garment support, which enables automatic tucking and adjustments."
+    },
+    "Hair": {
+      "description": "Hair-related mods to improve and/or add hair, textures and more."
+    },
+    "HiRes": {
+      "description": "High resolution textures for different aspects of the game, from environment textures to NPCs."
+    },
+    "ItemCodes": {
+      "description": "Item codes for the items added by this mod."
     },
     "MIBL": {
       "label": "Microblend Resource",
@@ -96,6 +136,12 @@
         "TweakXL"
       ]
     },
+    "MaleV": {
+      "description": "This mod is compatible with male characters."
+    },
+    "ManualDL": {
+      "description": "This mod requires you to download the files manually - the mod manager download option is not available."
+    },
     "MatEX": {
       "label": "Multi-Material extender",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/5570",
@@ -109,6 +155,12 @@
         "Red4Ext",
         "RedScript"
       ]
+    },
+    "NEW": {
+      "description": "Newly added mod that has not been tested in the game yet."
+    },
+    "NPC": {
+      "description": "Mods related to NPCs."
     },
     "NativeSettings": {
       "label": "Native Settings UI",
@@ -133,6 +185,18 @@
         "TweakXL"
       ]
     },
+    "Photos": {
+      "description": "Mods around the photo mode, from enhancements to pose packs and more."
+    },
+    "Poses": {
+      "description": "Mods that add pose packs for the photo mode or to use with AMM."
+    },
+    "Quest": {
+      "description": "Mods that add or modify quests."
+    },
+    "ReadNotes": {
+      "description": "It is recommended to read the mod's official description,\nas there are important usage instructions there."
+    },
     "Red4Ext": {
       "label": "RedScript 4 Extender",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/2380",
@@ -141,6 +205,9 @@
     "RedScript": {
       "label": "Red engine scripting language",
       "requires": []
+    },
+    "Store": {
+      "description": "These are virtual atelier mods that add clothing items."
     },
     "TexOverride": {
       "label": "Texture Override",
@@ -158,6 +225,9 @@
       "label": "Unique Eyes",
       "url": "https://nexusmods.com/cyberpunk2077/mods/1937",
       "requires": []
+    },
+    "Vanilla": {
+      "description": "This mod is compatible with the vanilla game."
     }
   }
 }

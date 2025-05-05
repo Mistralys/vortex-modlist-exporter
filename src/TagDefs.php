@@ -52,10 +52,13 @@ class TagDefs extends BaseStringPrimaryCollection
 
     private function registerTag(string $name, array $tagDef) : void
     {
-        $label = $tagDef['label'] ?? '';
-        $requires = $tagDef['requires'] ?? array();
-        $url = $tagDef['url'] ?? null;
-
-        $this->registerItem(new TagDef($this, $name, $label, $requires, $url));
+        $this->registerItem(new TagDef(
+            $this,
+            $name,
+            $tagDef['label'] ?? '',
+            $tagDef['description'] ?? '',
+            $tagDef['requires'] ?? array(),
+            $tagDef['url'] ?? null
+        ));
     }
 }
