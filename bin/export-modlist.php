@@ -75,8 +75,11 @@ function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $
         }
 
         preg_match_all('/\[([^]]+)]/', $name, $matches);
-        $modTags = array();
+        $keepTags = array();
         $cleanName = $name;
+        $ignoreDates = $game->getOptions()->areDateTagsIgnored();
+        $ignoreUnknown = $game->getOptions()->isUnknownCategoryIgnored();
+
         if (!empty($matches[1]))
         {
             foreach ($matches[0] as $match) {
@@ -95,14 +98,26 @@ function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $
             sort($modTags);
             foreach ($matches[1] as $tag) {
                 $tag = trim($tag);
+
+                if($ignoreDates && isDate($tag)) {
+                    continue;
+                }
+
+                $keepTags[] = $tag;
+
                 if (!isset($tags[$tag])) {
                     $tags[$tag] = array();
                 }
+
                 $tags[$tag][] = $cleanName;
             }
         }
 
         $category = $categoriesData[$category]['name'] ?? Games::UNKNOWN_CATEGORY_NAME;
+
+        if($ignoreUnknown && $category === Games::UNKNOWN_CATEGORY_NAME) {
+            continue;
+        }
 
         if (!isset($categories[$category])) {
             $categories[$category] = array();
@@ -116,7 +131,7 @@ function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $
             Mod::KEY_HOMEPAGE => $attribs['homepage'] ?? '',
             Mod::KEY_CATEGORY => $category,
             Mod::KEY_ENDORSED => $attribs['endorsed'] ?? 'Undecided',
-            Mod::KEY_TAGS => $modTags,
+            Mod::KEY_TAGS => $keepTags,
         );
     }
 
@@ -151,4 +166,9 @@ function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $
 
     echo "  - DONE, saved to " . $fileName . PHP_EOL;
     echo PHP_EOL;
+}
+
+function isDate(string $tag) : bool
+{
+    return strtotime($tag) !== false;
 }
