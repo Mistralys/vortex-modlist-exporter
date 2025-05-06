@@ -1,7 +1,10 @@
 # Changelog
 
-## v1.2 - Mod doc fix
+## v1.2 - Unused mod handling
 - Fixed a missing newline in the mod details Markdown file.
+- Added options to include mods marked as unused in the export.
+- Added canned tags to mark unused mods when they are included.
+- Unused mod prefixes are now `ZZ -` and `ZY -` instead of `Z -` and `Y -`.
 
 ## v1.1 - Export options
 - Added an option to ignore tags based on dates.
