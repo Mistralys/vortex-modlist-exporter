@@ -16,7 +16,7 @@ the mods.
 2. Run `composer install` to install the dependencies
 3. Copy the `config.dist.php` file to `config.php`
 4. Edit the config settings
-5. Create a game config (see below)
+5. [Create a game config](#create-a-game-config)
 
 ## Create a game config
 
@@ -28,13 +28,13 @@ information on the game and optional tag definitions.
 
 Create the configuration file under `games/game-name.json`.
 
-`game-name` is the name that Vortex uses internally. This is usually
-the game's name, lowercase, without spaces. For example: `cyberpunk2077`,
-`reddeadredemption2`.
+Where `game-name` is the name that Vortex uses internally.
+This is the game's name, lowercase, without spaces. For example: 
+`cyberpunk2077`, `reddeadredemption2`.
 
 ### Minimum config
 
-At minimum, the file must contain the human-readable name of
+At minimum, the file must contain the human-readable label of
 the game:
 
 ```json
@@ -46,23 +46,29 @@ the game:
 ### Export options
 
 Some options can be added to the game config to control what
-is included in the export. The following options are available:
-
-- `ignoreDateTags` - Ignore tags that contain a date. This is useful
-  for tags that are used to track mod updates, but are not relevant
-  for the export.
-- `ignoreUnknownCategory` - Ignore mods that do not have a category
-  assigned. 
+is included in the export. The following options are available
+(with their default values):
 
 ```json
 {
   "label": "Cyberpunk 2077",
   "options": {
     "ignoreDateTags": true,
-    "ignoreUnknownCategory": true
+    "ignoreUnknownCategory": true,
+    "includeUnusedMods": false,
+    "includeTemporarilyUnusedMods": false
   }
 }
 ```
+- `ignoreDateTags` (`true`) - Ignore tags that contain a date. This is useful
+  for tags that are used to track mod updates, but are not relevant
+  for the export.
+- `ignoreUnknownCategory` (`true`) - Ignore mods that do not have a category
+  assigned.
+- `includeUnused` (`false`) - Include mods that are marked as unused with
+  the `ZZ -` prefix.
+- `includeTemporarilyUnused` (`false`) - Include mods that are marked as
+  temporarily unused with the `ZY -` prefix.
 
 ### Tag definitions
 
@@ -132,3 +138,23 @@ In addition to this, I also add a date to the mod name, like this:
 
 This can help to quickly run down mod-related issues after installing
 new ones.
+
+## Handling unused, broken or bad mods
+
+I usually leave mods that don't work or are broken in Vortex, in disabled
+state, with a short comment why they are disabled. To group them together,
+I use two prefixes to have them at the very bottom of the mod list when
+sorting by mod name:
+
+- `ZY -` - Temporarily unused. For example, waiting for an update.
+- `ZZ -` - Unused. Broken mods, or mods that I don't want to use anymore.
+
+The script ignores both of these prefixes by default, so those mods will 
+not appear in the exported list.
+
+### Including unused mods in the export
+
+You can enable the exporting of unused mods with export options 
+(see the [export options](#export-options)). If you do, they will 
+automatically be tagged with `[Unused]` and `[UnusedTemp]` to properly 
+categorize them.
