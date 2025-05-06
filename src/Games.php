@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package VortexModExporter
+ * @subpackage Games
+ */
 
 declare(strict_types=1);
 
@@ -19,6 +23,8 @@ use AppUtils\FileHelper\JSONFile;
 class Games extends BaseStringPrimaryCollection
 {
     public const UNKNOWN_CATEGORY_NAME = 'Unknown';
+    public const PREFIX_UNUSED = 'ZZ -';
+    public const PREFIX_AWAIT_UPDATE = 'ZY -';
     private static ?Games $instance = null;
 
     public static function getInstance() : Games
