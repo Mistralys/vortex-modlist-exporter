@@ -133,7 +133,7 @@ function writeGameModsReference(Game $game) : void
         $lines[] = sprintf("### %s\n", titleify($mod->getName()));
         $lines[] = "\n";
 
-        $lines[] = sprintf('Category: %s'.PHP_EOL, $mod->getCategory());
+        $lines[] = sprintf('Category: %s  '.PHP_EOL, $mod->getCategory());
         $lines[] = sprintf('Homepage: [%s](%s)  '.PHP_EOL, parseURL($mod->getHomepage())->getHost(), $mod->getHomepage());
 
         $tags = $mod->getInheritedTags();
