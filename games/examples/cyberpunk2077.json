@@ -1,5 +1,11 @@
 {
   "label": "Cyberpunk 2077",
+  "options": {
+    "ignoreDateTags": true,
+    "ignoreUnknownCategory": true,
+    "includeUnusedMods": true,
+    "includeTemporarilyUnusedMods": true
+  },
   "tagDefinitions": {
     "AMM": {
       "label": "Appearance Menu Mod",
@@ -10,7 +16,6 @@
       ]
     },
     "ArchiveXL": {
-      "label": "",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/4198",
       "requires": [
         "Red4Ext"
@@ -32,7 +37,6 @@
       "description": "Mods to improve the clothing system in general."
     },
     "Body": {
-      "label": "",
       "description": "Body-related mods to improve the skeleton, textures and more.",
       "requires": []
     },
@@ -73,14 +77,16 @@
       ]
     },
     "ChooseArchive": {
-      "description": "This mod requires you to choose one of the `.archive` files after\ninstalling it to choose the variant to use."
+      "description": "These mods require you to choose one of the `.archive` files after\ninstalling it to choose the variant to use."
     },
     "Codeware": {
-      "label": "Codeware",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/7780",
       "requires": [
         "Red4Ext"
       ]
+    },
+    "Console": {
+      "description": "These mods add functionality to the CET console, or are primarily\nused through the console."
     },
     "CookedApps": {
       "label": "Cooked Apps Nulled",
@@ -88,13 +94,19 @@
       "requires": []
     },
     "Core": {
+      "label": "Core mods",
       "description": "Absolute minimum core mods needed by other mods to work."
     },
     "Core2": {
-      "description": "Most important mods that you do not want to play without."
+      "label": "Essential mods",
+      "description": "Essential mods that you do not want to play without."
     },
     "Core3": {
+      "label": "Important mods",
       "description": "Important mods, but that you can live without."
+    },
+    "CustomMod": {
+      "description": "Custom mods that have no online source."
     },
     "EQEX": {
       "label": "Equipment-EX",
@@ -117,6 +129,7 @@
       "description": "Hair-related mods to improve and/or add hair, textures and more."
     },
     "HiRes": {
+      "label": "High Resolution Textures",
       "description": "High resolution textures for different aspects of the game, from environment textures to NPCs."
     },
     "ItemCodes": {
@@ -140,6 +153,7 @@
       "description": "This mod is compatible with male characters."
     },
     "ManualDL": {
+      "label": "Manual Download",
       "description": "This mod requires you to download the files manually - the mod manager download option is not available."
     },
     "MatEX": {
@@ -148,7 +162,6 @@
       "requires": []
     },
     "ModSettings": {
-      "label": "Mod Settings",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/4885",
       "requires": [
         "ArchiveXL",
@@ -170,7 +183,6 @@
       ]
     },
     "NoPaperBags": {
-      "label": "No Paper Bags",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/8387",
       "requires": [
         "CET"
@@ -215,14 +227,12 @@
       "requires": []
     },
     "TweakXL": {
-      "label": "TweakXL",
       "url": "https://www.nexusmods.com/cyberpunk2077/mods/4197",
       "requires": [
         "Red4Ext"
       ]
     },
     "UniqueEyes": {
-      "label": "Unique Eyes",
       "url": "https://nexusmods.com/cyberpunk2077/mods/1937",
       "requires": []
     },
