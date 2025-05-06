@@ -1,4 +1,18 @@
 <?php
+/**
+ * This script is used to generate the Markdown documentation
+ * files for all available games.
+ *
+ * ## Usage
+ *
+ * 1. (Optional) Run `php bin/export-modlist.php` to update the modlist.
+ * 2. Run `php bin/generate-docs.php`.
+ *
+ * The files are stored in the `output` folder.
+ *
+ * @package VortexModExporter
+ * @subpackage Command Line
+ */
 
 declare(strict_types=1);
 
@@ -76,6 +90,13 @@ function writeGameTagsReference(Game $game) : void
 
         foreach($modNames as $modName) {
             $mod = $mods->getByID($modName);
+
+            $homepage = $mod->getHomepage();
+            if (empty($homepage)) {
+                $lines[] = sprintf("- %s\n", $modName);
+                continue;
+            }
+
             $lines[] = sprintf("- [%s](%s)\n", $modName, $mod->getHomepage());
         }
 
@@ -134,7 +155,11 @@ function writeGameModsReference(Game $game) : void
         $lines[] = "\n";
 
         $lines[] = sprintf('Category: %s  '.PHP_EOL, $mod->getCategory());
-        $lines[] = sprintf('Homepage: [%s](%s)  '.PHP_EOL, parseURL($mod->getHomepage())->getHost(), $mod->getHomepage());
+
+        $homepage = $mod->getHomepage();
+        if (!empty($homepage)) {
+            $lines[] = sprintf('Homepage: [%s](%s)  ' . PHP_EOL, parseURL($mod->getHomepage())->getHost(), $mod->getHomepage());
+        }
 
         $tags = $mod->getInheritedTags();
         if (!empty($tags)) {
