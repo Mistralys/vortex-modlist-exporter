@@ -1,4 +1,10 @@
 <?php
+/**
+ * Common functions for the command line tools.
+ *
+ * @package VortexModExporter
+ * @subpackage Command Line
+ */
 
 declare(strict_types=1);
 

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package VortexModExporter
+ * @subpackage Games
+ */
 
 declare(strict_types=1);
 
@@ -7,6 +11,12 @@ namespace Mistralys\VortexModExporter;
 use AppUtils\ArrayDataCollection;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
+/**
+ * Stores information about a single mod.
+ *
+ * @package VortexModExporter
+ * @subpackage Mods
+ */
 class Mod implements StringPrimaryRecordInterface
 {
     public const KEY_TAGGED_NAME = 'taggedName';

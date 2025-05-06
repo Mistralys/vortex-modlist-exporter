@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package VortexModExporter
+ * @subpackage Games
+ */
 
 declare(strict_types=1);
 
@@ -9,6 +13,12 @@ use AppUtils\FileHelper\JSONFile;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 use DateTime;
 
+/**
+ * Stores information about a game and its mods.
+ *
+ * @package VortexModExporter
+ * @subpackage Games
+ */
 class Game implements StringPrimaryRecordInterface
 {
     public const KEY_DATA_GAME = 'game';

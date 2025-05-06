@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package VortexModExporter
+ * @subpackage Tag Definitions
+ */
 
 declare(strict_types=1);
 
@@ -6,6 +10,13 @@ namespace Mistralys\VortexModExporter;
 
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
+/**
+ * Stores information on a tag described in a game's
+ * configuration file.
+ *
+ * @package VortexModExporter
+ * @subpackage Tag Definitions
+ */
 class TagDef implements StringPrimaryRecordInterface
 {
     private string $name;

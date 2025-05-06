@@ -1,16 +1,9 @@
 <?php
 /**
- * Main export script.
- *
- * # Usage
- *
- * 1. Open Vortex
- * 2. Go to Settings > Workarounds
- * 3. In the "Database Backup" section, click "Create Backup"
- * 4. Run the script
+ * Sets up the environment for the command line tools.
  *
  * @package VortexModExporter
- * @subpackage Core
+ * @subpackage Command Line
  */
 
 declare(strict_types=1);

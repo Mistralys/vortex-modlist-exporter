@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package VortexModExporter
+ * @subpackage Mods
+ */
 
 declare(strict_types=1);
 
@@ -8,6 +12,8 @@ use AppUtils\ArrayDataCollection;
 use AppUtils\Collections\BaseStringPrimaryCollection;
 
 /**
+ * Accesses information on all mods for a game.
+ *
  * @package VortexModExporter
  * @subpackage Mods
  *
