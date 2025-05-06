@@ -1,16 +1,18 @@
 <?php
 /**
- * Main export script.
+ * Main mod list export script that collects information
+ * from the Vortex database backup file and generates
+ * a mod list file for each game.
  *
- * # Usage
+ * ## Usage
  *
  * 1. Open Vortex
  * 2. Go to Settings > Workarounds
  * 3. In the "Database Backup" section, click "Create Backup"
- * 4. Run the script
+ * 4. Run `php bin/export-modlist.php`
  *
  * @package VortexModExporter
- * @subpackage Core
+ * @subpackage Command Line
  */
 
 declare(strict_types=1);
@@ -61,6 +63,11 @@ function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $
 
     echo sprintf('  - Exporting mod list for [%s] mods...', count($modsData)) . PHP_EOL;
 
+    $ignoreDates = $game->getOptions()->areDateTagsIgnored();
+    $ignoreUnknown = $game->getOptions()->isUnknownCategoryIgnored();
+    $includeUnused = $game->getOptions()->areUnusedModsIncluded();
+    $includeUnusedTemp = $game->getOptions()->areTemporarilyUnusedModsIncluded();
+
     $mods = array();
     $tags = array();
     $categories = array();
@@ -70,15 +77,29 @@ function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $
         $name = $attribs['customFileName'] ?? $attribs['fileName'] ?? $attribs['modName'] ?? $attribs['name'] ?? 'Unnamed' ;
         $category = $attribs['category'] ?? 0;
 
-        if (str_starts_with($name, 'Z -') || str_starts_with($name, 'Y -')) {
+        $unused = str_starts_with($name, Games::PREFIX_UNUSED);
+
+        if($unused && !$includeUnused) {
             continue;
+        }
+
+        if ($unused) {
+            $name .= ' ['.TagDefs::TAG_UNUSED.']';
+        }
+
+        $unusedTemp = str_starts_with($name, Games::PREFIX_AWAIT_UPDATE);
+
+        if($unusedTemp && !$includeUnusedTemp) {
+            continue;
+        }
+
+        if ($unusedTemp) {
+            $name .= ' ['.TagDefs::TAG_UNUSED_TEMPORARILY.']';
         }
 
         preg_match_all('/\[([^]]+)]/', $name, $matches);
         $keepTags = array();
         $cleanName = $name;
-        $ignoreDates = $game->getOptions()->areDateTagsIgnored();
-        $ignoreUnknown = $game->getOptions()->isUnknownCategoryIgnored();
 
         if (!empty($matches[1]))
         {
