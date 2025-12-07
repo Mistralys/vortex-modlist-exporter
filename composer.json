@@ -15,15 +15,20 @@
       "src"
     ],
     "files": [
-      "bin/functions.php"
+      "src/functions.php"
     ]
   },
   "require": {
     "mistralys/application-utils-core": ">=2.3.3",
     "mistralys/application-utils-collections": ">=1.1.2",
-    "php": ">=8.2"
+    "php": ">=8.4"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
+  },
+  "scripts": {
+    "export-modlist": "Mistralys\\VortexModExporter\\ComposerScripts::exportModlist",
+    "generate-docs": "Mistralys\\VortexModExporter\\ComposerScripts::generateDocs",
+    "build": "Mistralys\\VortexModExporter\\ComposerScripts::build"
   }
 }
