@@ -56,7 +56,8 @@ is included in the export. The following options are available
     "ignoreDateTags": true,
     "ignoreUnknownCategory": true,
     "includeUnusedMods": false,
-    "includeTemporarilyUnusedMods": false
+    "includeTemporarilyUnusedMods": false,
+    "outputFolder": null
   }
 }
 ```
@@ -69,6 +70,8 @@ is included in the export. The following options are available
   the `ZZ -` prefix.
 - `includeTemporarilyUnused` (`false`) - Include mods that are marked as
   temporarily unused with the `ZY -` prefix.
+- `outputFolder` (`null` / `{folderPath}`) - Optional folder to copy all 
+  output files to. Will be created if it does not exist.
 
 ### Tag definitions
 
@@ -84,8 +87,7 @@ which contains a detailed tagging setup.
 1. Open Vortex
 2. Go to Settings > Workarounds
 3. In the "Database Backup" section, click "Create Backup"
-4. Run `php bin/export-modlist.php` to generate the mod list
-5. Run `php bin/generate-docs.php` to generate the Markdown files
+4. Run `composer build` to run all tasks.
 
 You will find the export files in the `output` directory. 
 Some examples of what the script generates can be found 
@@ -93,6 +95,14 @@ in the [examples](./output/examples) folder.
 
 > **Note:** Re-export the database in Vortex after you've
 > done changes, and re-run the script to update the mod list.
+
+### Individual commands
+
+The `build` command runs all tasks, but they can also be run
+individually:
+
+- Run `composer export-modlist` to generate the mod list
+- Run `composer generate-docs` to generate the Markdown files
 
 ## How to use tagging
 
