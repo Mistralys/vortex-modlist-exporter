@@ -1,0 +1,197 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Mistralys\VortexModExporter\ComposerScripts;
+
+use AppUtils\FileHelper\JSONFile;
+use AppUtils\Microtime;
+use DateTime;
+use Mistralys\VortexModExporter\Game;
+use Mistralys\VortexModExporter\Games;
+use Mistralys\VortexModExporter\Mod;
+use Mistralys\VortexModExporter\TagDefs;
+use const Mistralys\VortexModExporter\OUTPUT_FOLDER;
+use const Mistralys\VortexModExporter\VORTEX_APPDATA_FOLDER;
+
+class ExportModlist
+{
+    public function export() : void
+    {
+        $file = JSONFile::factory(VORTEX_APPDATA_FOLDER . '/temp/state_backups_full/manual.json');
+
+        if (!$file->exists()) {
+            die('Vortex backup file not found. Have you made a manual database export from the interface?' . PHP_EOL);
+        }
+
+        $date = $file->getModifiedDate();
+        if ($date === null) {
+            die('The backup file does not have a valid date. Please make sure you are using the correct file.' . PHP_EOL);
+        }
+
+        $data = $file->getData();
+
+        if (!isset($data['persistent']['mods'])) {
+            die('The mods storage key way not found in the database backup file.' . PHP_EOL);
+        }
+
+        foreach (Games::getInstance()->getAll() as $game) {
+            $gameID = $game->getVortexID();
+            echo 'Game: ' . $gameID . PHP_EOL;
+            if (!isset($data['persistent']['mods'][$gameID])) {
+                die(sprintf('ERROR: The game [%s] was not found in the database backup file.', $gameID) . PHP_EOL);
+            }
+
+            $this->exportGame(
+                $game,
+                $date,
+                $data['persistent']['mods'][$gameID],
+                $data['persistent']['categories'][$gameID] ?? array()
+            );
+        }
+    }
+
+    private function exportGame(Game $game, DateTime $databaseDate, array $modsData, array $categoriesData) : void
+    {
+        $gameID = $game->getVortexID();
+
+        echo sprintf('  - Exporting mod list for [%s] mods...', count($modsData)) . PHP_EOL;
+
+        $ignoreDates = $game->getOptions()->areDateTagsIgnored();
+        $ignoreUnknown = $game->getOptions()->isUnknownCategoryIgnored();
+        $includeUnused = $game->getOptions()->areUnusedModsIncluded();
+        $includeUnusedTemp = $game->getOptions()->areTemporarilyUnusedModsIncluded();
+        $outputFolder = $game->getOptions()->getOutputFolder();
+
+        $mods = array();
+        $tags = array();
+        $categories = array();
+        foreach ($modsData as $modData)
+        {
+            $attribs = $modData['attributes'];
+            $name = $attribs['customFileName'] ?? $attribs['fileName'] ?? $attribs['modName'] ?? $attribs['name'] ?? 'Unnamed' ;
+            $category = $attribs['category'] ?? 0;
+
+            $unused = str_starts_with($name, Games::PREFIX_UNUSED);
+
+            if($unused && !$includeUnused) {
+                continue;
+            }
+
+            if ($unused) {
+                $name .= ' ['.TagDefs::TAG_UNUSED.']';
+            }
+
+            $unusedTemp = str_starts_with($name, Games::PREFIX_AWAIT_UPDATE);
+
+            if($unusedTemp && !$includeUnusedTemp) {
+                continue;
+            }
+
+            if ($unusedTemp) {
+                $name .= ' ['.TagDefs::TAG_UNUSED_TEMPORARILY.']';
+            }
+
+            preg_match_all('/\[([^]]+)]/', $name, $matches);
+            $keepTags = array();
+            $cleanName = $name;
+
+            if (!empty($matches[1]))
+            {
+                foreach ($matches[0] as $match) {
+                    $cleanName = str_replace($match, '', $cleanName);
+                }
+
+                $cleanName = str_replace(array('[', ']', '?'), '', $cleanName);
+
+                $cleanName = trim($cleanName);
+
+                while(str_contains($cleanName, '  ')) {
+                    $cleanName = str_replace('  ', ' ', $cleanName);
+                }
+
+                $modTags = $matches[1];
+                sort($modTags);
+                foreach ($matches[1] as $tag) {
+                    $tag = trim($tag);
+
+                    if($ignoreDates && $this->isDate($tag)) {
+                        continue;
+                    }
+
+                    $keepTags[] = $tag;
+
+                    if (!isset($tags[$tag])) {
+                        $tags[$tag] = array();
+                    }
+
+                    $tags[$tag][] = $cleanName;
+                }
+            }
+
+            $category = $categoriesData[$category]['name'] ?? Games::UNKNOWN_CATEGORY_NAME;
+
+            if($ignoreUnknown && $category === Games::UNKNOWN_CATEGORY_NAME) {
+                continue;
+            }
+
+            if (!isset($categories[$category])) {
+                $categories[$category] = array();
+            }
+
+            $categories[$category][] = $cleanName;
+
+            $mods[$cleanName] = array(
+                Mod::KEY_TAGGED_NAME => $name,
+                Mod::KEY_OFFICIAL_NAME => $attribs['modName'] ?? '',
+                Mod::KEY_HOMEPAGE => $attribs['homepage'] ?? '',
+                Mod::KEY_CATEGORY => $category,
+                Mod::KEY_ENDORSED => $attribs['endorsed'] ?? 'Undecided',
+                Mod::KEY_TAGS => $keepTags,
+            );
+        }
+
+        uksort($categories, 'strnatcasecmp');
+
+        foreach (array_keys($categories) as $category) {
+            usort($categories[$category], 'strnatcasecmp');
+        }
+
+        uksort($tags, 'strnatcasecmp');
+
+        foreach (array_keys($tags) as $tag) {
+            usort($tags[$tag], 'strnatcasecmp');
+        }
+
+        uksort($mods, 'strnatcasecmp');
+
+        $fileName = $gameID.'-modlist.json';
+
+        $file = JSONFile::factory(OUTPUT_FOLDER . '/'.$fileName)
+            ->setEscapeSlashes(false)
+            ->setTrailingNewline(true)
+            ->setPrettyPrint(true)
+            ->putData(array(
+                Game::KEY_DATA_GAME => $gameID,
+                Game::KEY_DATA_DATABASE_DATE => Microtime::createFromDate($databaseDate)->getISODate(true),
+                Game::KEY_DATA_EXPORT_DATE => Microtime::createNow()->getISODate(true),
+                Game::KEY_DATA_CATEGORIES => $categories,
+                Game::KEY_DATA_TAGS => $tags,
+                Game::KEY_DATA_MODS => $mods
+            ));
+
+        echo "  - DONE, saved to " . $fileName . PHP_EOL;
+
+        if($outputFolder !== null) {
+            $file->copyTo($outputFolder.'/'.$fileName);
+            echo "  - Also copied to output folder: ".$outputFolder->getPath().PHP_EOL;
+        }
+
+        echo PHP_EOL;
+    }
+
+    private function isDate(string $tag) : bool
+    {
+        return strtotime($tag) !== false;
+    }
+}
