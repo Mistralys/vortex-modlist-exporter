@@ -1,0 +1,64 @@
+{
+  "label": "Starfield",
+  "options": {
+    "ignoreDateTags": true,
+    "ignoreUnknownCategory": true,
+    "includeUnusedMods": true,
+    "includeTemporarilyUnusedMods": false
+  },
+  "tagDefinitions": {
+    "SFSE": {
+      "label": "Starfield Script Extender",
+      "url": "https://www.nexusmods.com/starfield/mods/106"
+    },
+    "Vanilla": {
+      "label": "Vanilla mod",
+      "description": "Mod that does not require anything beyond the base game."
+    },
+    "WSEP": {
+      "label": "Weapon Skins Expansion Project",
+      "description": "Adds new weapon skins.",
+      "url": "https://www.nexusmods.com/starfield/mods/9764"
+    },
+    "RTFP": {
+      "label": "Real Time Form Patcher",
+      "url": "https://www.nexusmods.com/starfield/mods/8324"
+    },
+    "NEW": {
+      "label": "New, untested",
+      "description": "Mod that has been recently added, and that has not been fully tested yet."
+    },
+    "NPC": {
+      "label": "For NPCs",
+      "description": "Mod that affects NPCs in some way."
+    },
+    "Replacer": {
+      "label": "Replacer",
+      "description": "Mod that replaces existing items in the game."
+    },
+    "INI": {
+      "label": "INI Settings",
+      "description": "Mod that requires specific settings in the `StarfieldCustom.ini` file."
+    },
+    "Installer": {
+      "label": "Custom installer",
+      "description": "Mod that uses a custom installer, e.g. Vortex wizard or third-party installer."
+    },
+    "Core": {
+      "label": "Core mods",
+      "description": "Core functionality mods that other mods depend on."
+    },
+    "Core2": {
+      "label": "Core mods - level 2",
+      "description": "Core functionality mods that build on core mods."
+    },
+    "BAT": {
+      "label": "Batch commands",
+      "description": "Mod that adds or requires batch commands to be run."
+    },
+    "ItemCodes": {
+      "label": "Item codes",
+      "description": "Mod that contains items that must be added to the inventory using add item commands."
+    }
+  }
+}
