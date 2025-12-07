@@ -7,7 +7,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/mistralys/application-utils-collections" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mistralys/application-utils-core" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/neitanod/forceutf8" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
