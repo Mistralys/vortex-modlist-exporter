@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Mistralys\VortexModExporter;
 
 use AppUtils\ArrayDataCollection;
+use AppUtils\FileHelper\FolderInfo;
 
 /**
  * Stores game-related options.
@@ -22,6 +23,7 @@ class GameOptions extends ArrayDataCollection
     public const KEY_IGNORE_UNKNOWN_CATEGORY = 'ignoreUnknownCategory';
     public const KEY_DEF_INCLUDE_UNUSED_MODS = 'includeUnusedMods';
     public const KEY_DEF_INCLUDE_TEMPORARILY_UNUSED = 'includeTemporarilyUnusedMods';
+    const string KEY_OUTPUT_FOLDER = 'outputFolder';
 
     /**
      * Whether to ignore all tags that are based on a date.
@@ -32,6 +34,16 @@ class GameOptions extends ArrayDataCollection
     public function areDateTagsIgnored() : bool
     {
         return $this->getBool(self::KEY_IGNORE_DATE_TAGS);
+    }
+
+    public function getOutputFolder() : ?FolderInfo
+    {
+        $path = $this->getString(self::KEY_OUTPUT_FOLDER);
+        if(empty($path)) {
+            return null;
+        }
+
+        return FolderInfo::factory($path)->create();
     }
 
     /**
