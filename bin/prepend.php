@@ -21,8 +21,8 @@ if(!file_exists($autoloadFile)) {
     die('Please run "composer install" to install the required dependencies.'.PHP_EOL);
 }
 
-require_once $autoloadFile;
 require_once $configFile;
+require_once $autoloadFile;
 
 if(!is_dir(VORTEX_APPDATA_FOLDER)) {
     die('Vortex AppData folder not found, please check that the setting points to the correct path.'.PHP_EOL);
