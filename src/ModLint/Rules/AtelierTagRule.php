@@ -16,6 +16,9 @@ use Mistralys\VortexModExporter\ModLint\ModLintRuleInterface;
  * standard distribution mechanism for clothing mods in Cyberpunk 2077. The
  * vast majority of clothing mods that omit this tag are missing it by accident.
  *
+ * Exception: mods tagged with "NoStore" are silently skipped — they intentionally
+ * have no virtual atelier.
+ *
  * The category and tag comparisons are both case-insensitive.
  *
  * @package VortexModExporter
@@ -25,10 +28,15 @@ class AtelierTagRule implements ModLintRuleInterface
 {
     public const CATEGORY = 'Armour and Clothing';
     public const TAG      = 'Atelier';
+    public const TAG_NO_STORE = 'NoStore';
 
     public function check(ModLintContext $context): array
     {
         if (!$context->isCategoryMatch(self::CATEGORY)) {
+            return [];
+        }
+
+        if ($context->hasTag(self::TAG_NO_STORE)) {
             return [];
         }
 
