@@ -6,9 +6,17 @@ namespace Mistralys\VortexModExporter;
 
 use Mistralys\VortexModExporter\ComposerScripts\ExportModlist;
 use Mistralys\VortexModExporter\ComposerScripts\GenerateDocs;
+use Mistralys\VortexModExporter\ComposerScripts\NormalizeGameConfigs;
 
 class ComposerScripts
 {
+    public static function normalizeGameConfigs() : void
+    {
+        self::init();
+
+        new NormalizeGameConfigs()->normalize();
+    }
+
     public static function exportModlist() : void
     {
         self::init();
@@ -27,6 +35,7 @@ class ComposerScripts
     {
         self::init();
 
+        self::normalizeGameConfigs();
         self::exportModlist();
         self::generateDocs();
     }

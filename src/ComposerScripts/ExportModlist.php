@@ -10,6 +10,10 @@ use DateTime;
 use Mistralys\VortexModExporter\Game;
 use Mistralys\VortexModExporter\Games;
 use Mistralys\VortexModExporter\Mod;
+use Mistralys\VortexModExporter\ModLint\ModLintContext;
+use Mistralys\VortexModExporter\ModLint\ModLintIssue;
+use Mistralys\VortexModExporter\ModLint\ModLinter;
+use Mistralys\VortexModExporter\TagDef;
 use Mistralys\VortexModExporter\TagDefs;
 use const Mistralys\VortexModExporter\OUTPUT_FOLDER;
 use const Mistralys\VortexModExporter\VORTEX_APPDATA_FOLDER;
@@ -62,10 +66,14 @@ class ExportModlist
         $includeUnused = $game->getOptions()->areUnusedModsIncluded();
         $includeUnusedTemp = $game->getOptions()->areTemporarilyUnusedModsIncluded();
         $outputFolder = $game->getOptions()->getOutputFolder();
+        $definedTagMap = $game->getDefinedTagNameMap();
+        $grantsMap = $game->getGrantsMap();
+        $linter = ModLinter::createFromGame($game);
 
         $mods = array();
         $tags = array();
         $categories = array();
+        $lintIssues = array();
         foreach ($modsData as $modData)
         {
             $attribs = $modData['attributes'];
@@ -94,6 +102,7 @@ class ExportModlist
 
             preg_match_all('/\[([^]]+)]/', $name, $matches);
             $keepTags = array();
+            $modTagParams = array();
             $cleanName = $name;
 
             if (!empty($matches[1]))
@@ -111,21 +120,77 @@ class ExportModlist
                 }
 
                 $modTags = $matches[1];
+
                 sort($modTags);
                 foreach ($matches[1] as $tag) {
                     $tag = trim($tag);
+
+                    // Parse parameterized tags like [UPD:1.1] into base tag "UPD" and param "1.1".
+                    $tagParam = null;
+                    if(str_contains($tag, ':')) {
+                        [$tag, $tagParam] = explode(':', $tag, 2);
+                        $tag = trim($tag);
+                        $tagParam = trim($tagParam);
+                    }
+
+                    // Normalise tag case to the canonical form from the game definition.
+                    $tag = $definedTagMap[strtolower($tag)] ?? $tag;
 
                     if($ignoreDates && $this->isDate($tag)) {
                         continue;
                     }
 
-                    $keepTags[] = $tag;
+                    if(!in_array($tag, $keepTags, true)) {
+                        $keepTags[] = $tag;
+                    }
+
+                    if($tagParam !== null) {
+                        $modTagParams[$tag] = $tagParam;
+                    }
 
                     if (!isset($tags[$tag])) {
                         $tags[$tag] = array();
                     }
 
-                    $tags[$tag][] = $cleanName;
+                    if(!in_array($cleanName, $tags[$tag], true)) {
+                        $tags[$tag][] = $cleanName;
+                    }
+                }
+            }
+
+            // Expand any tags that grant additional tags to this mod.
+            // Collect grants from all current tags first to avoid modifying the
+            // loop array mid-iteration, then apply them in a second pass.
+            $grantedTags = array();
+            foreach ($keepTags as $tag) {
+                foreach ($grantsMap[$tag] ?? array() as $grantedTag) {
+                    $grantedTag = $definedTagMap[strtolower($grantedTag)] ?? $grantedTag;
+                    if (!in_array($grantedTag, $keepTags, true) && !in_array($grantedTag, $grantedTags, true)) {
+                        $grantedTags[] = $grantedTag;
+                    }
+                }
+            }
+
+            foreach ($grantedTags as $grantedTag) {
+                $keepTags[] = $grantedTag;
+                if (!isset($tags[$grantedTag])) {
+                    $tags[$grantedTag] = array();
+                }
+                if (!in_array($cleanName, $tags[$grantedTag], true)) {
+                    $tags[$grantedTag][] = $cleanName;
+                }
+            }
+
+            // Extract parenthesised notes from the mod name and collect them as comments.
+            $comments = $this->extractParenComments($cleanName);
+            if($comments !== '') {
+                preg_match_all('/\([^)]+\)/', $cleanName, $parenMatches);
+                foreach ($parenMatches[0] as $match) {
+                    $cleanName = str_replace($match, '', $cleanName);
+                }
+                $cleanName = trim($cleanName);
+                while(str_contains($cleanName, '  ')) {
+                    $cleanName = str_replace('  ', ' ', $cleanName);
                 }
             }
 
@@ -141,7 +206,7 @@ class ExportModlist
 
             $categories[$category][] = $cleanName;
 
-            $mods[$cleanName] = array(
+            $modEntry = array(
                 Mod::KEY_TAGGED_NAME => $name,
                 Mod::KEY_OFFICIAL_NAME => $attribs['modName'] ?? '',
                 Mod::KEY_HOMEPAGE => $attribs['homepage'] ?? '',
@@ -149,6 +214,23 @@ class ExportModlist
                 Mod::KEY_ENDORSED => $attribs['endorsed'] ?? 'Undecided',
                 Mod::KEY_TAGS => $keepTags,
             );
+
+            if(!empty($modTagParams)) {
+                $modEntry[Mod::KEY_TAG_PARAMS] = $modTagParams;
+            }
+
+            if($comments !== '') {
+                $modEntry[Mod::KEY_COMMENTS] = $comments;
+            }
+
+            $mods[$cleanName] = $modEntry;
+
+            array_push($lintIssues, ...$linter->checkMod(new ModLintContext(
+                $cleanName,
+                $category,
+                $keepTags,
+                $name
+            )));
         }
 
         uksort($categories, 'strnatcasecmp');
@@ -182,6 +264,18 @@ class ExportModlist
 
         echo "  - DONE, saved to " . $fileName . PHP_EOL;
 
+        $this->outputLintIssues($lintIssues);
+
+        $undescribedTags = array_map(
+            fn(TagDef $tagDef) => $tagDef->getName(),
+            $game->getTagDefs()->getUndescribedTags()
+        );
+
+        if (!empty($undescribedTags)) {
+            usort($undescribedTags, 'strnatcasecmp');
+            echo "  - WARNING: Undescribed tags found: " . implode(', ', $undescribedTags) . PHP_EOL;
+        }
+
         if($outputFolder !== null) {
             $file->copyTo($outputFolder.'/'.$fileName);
             echo "  - Also copied to output folder: ".$outputFolder->getPath().PHP_EOL;
@@ -190,8 +284,74 @@ class ExportModlist
         echo PHP_EOL;
     }
 
+    /**
+     * Outputs all lint issues grouped by severity to the CLI.
+     *
+     * Issues are sorted by type priority (ERROR → WARNING → NOTICE) and then
+     * alphabetically by mod name within each group.
+     *
+     * @param ModLintIssue[] $issues
+     */
+    private function outputLintIssues(array $issues) : void
+    {
+        if(empty($issues)) {
+            return;
+        }
+
+        $order = array(
+            ModLintIssue::TYPE_ERROR   => 0,
+            ModLintIssue::TYPE_WARNING => 1,
+            ModLintIssue::TYPE_NOTICE  => 2,
+        );
+
+        usort($issues, static function(ModLintIssue $a, ModLintIssue $b) use ($order) : int {
+            $typeCmp = ($order[$a->getType()] ?? 99) <=> ($order[$b->getType()] ?? 99);
+            if($typeCmp !== 0) {
+                return $typeCmp;
+            }
+            return strnatcasecmp($a->getModName(), $b->getModName());
+        });
+
+        echo sprintf('  - LINT: %d issue(s) found:', count($issues)) . PHP_EOL;
+        foreach($issues as $issue) {
+            echo $issue->format() . PHP_EOL;
+        }
+    }
+
     private function isDate(string $tag) : bool
     {
         return strtotime($tag) !== false;
+    }
+
+    /**
+     * Extracts text from all parenthesised groups in a mod name and returns
+     * them as a normalised, sentence-cased comment string with trailing dots.
+     * Returns an empty string when no parentheses are found.
+     *
+     * Example: "Mod name (Vanilla) (Adds new items)"
+     *   → "Vanilla. Adds new items."
+     */
+    private function extractParenComments(string $name) : string
+    {
+        preg_match_all('/\(([^)]+)\)/', $name, $matches);
+
+        if(empty($matches[1])) {
+            return '';
+        }
+
+        $parts = array();
+        foreach($matches[1] as $raw) {
+            $part = trim($raw);
+            if($part === '') {
+                continue;
+            }
+            $part = ucfirst($part);
+            if(!str_ends_with($part, '.') && !str_ends_with($part, '!') && !str_ends_with($part, '?')) {
+                $part .= '.';
+            }
+            $parts[] = $part;
+        }
+
+        return implode(' ', $parts);
     }
 }

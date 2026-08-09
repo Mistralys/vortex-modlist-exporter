@@ -68,6 +68,7 @@ class Game implements StringPrimaryRecordInterface
     public const KEY_DEF_LABEL         = 'label';
     public const KEY_DEF_TAG_DEFINITIONS = 'tagDefinitions';
     public const KEY_DEF_OPTIONS       = 'options';
+    public const KEY_DEF_RULES         = 'rules';
 
     public function __construct(JSONFile $definitionFile);
 
@@ -85,6 +86,7 @@ class Game implements StringPrimaryRecordInterface
     public function getModTagParam(string $modName, string $tagName): ?string;  // Parameter stored for mod/tag pair, or null
     public function getDefinedTagNameMap(): array; // lowercase => canonical tag name map from definition file (includes canned tags)
     public function getGrantsMap(): array;          // tag name => string[] of granted tag names; built from definition file
+    public function getRulesConfig(): array;        // Raw rules array from definition file; empty array when key absent
     public function getTagDefs(): TagDefs;
 }
 ```
@@ -238,6 +240,91 @@ class TagDefs extends BaseStringPrimaryCollection
     // Inherited: getByID(string $id): TagDef
     // Inherited: getAll(): TagDef[]
     // Inherited: idExists(string $id): bool
+}
+```
+
+---
+
+## Mod Lint System (`src/ModLint/`)
+
+Namespace: `Mistralys\VortexModExporter\ModLint`
+
+### `ModLintContext` (`src/ModLint/ModLintContext.php`)
+
+```php
+class ModLintContext
+{
+    public function __construct(
+        string $modName,    // Clean name (tags stripped)
+        string $category,   // Category label from Vortex
+        array  $tags,       // string[] — direct canonical tag names
+        string $taggedName  // Full name with [Tag] brackets
+    );
+
+    public function getModName(): string;
+    public function getCategory(): string;
+    public function getTags(): string[];        // Direct (non-inherited) tags
+    public function getTaggedName(): string;
+    public function isCategoryMatch(string $category): bool;  // Case-insensitive
+    public function hasTag(string $tagName): bool;             // Case-insensitive
+}
+```
+
+### `ModLintIssue` (`src/ModLint/ModLintIssue.php`)
+
+```php
+class ModLintIssue
+{
+    public const TYPE_NOTICE  = 'NOTICE';
+    public const TYPE_WARNING = 'WARNING';
+    public const TYPE_ERROR   = 'ERROR';
+
+    public function __construct(string $type, string $modName, string $message);
+
+    public function getType(): string;     // One of the TYPE_* constants
+    public function getModName(): string;  // Clean name of the flagged mod
+    public function getMessage(): string;  // Human-readable issue description
+    public function format(): string;      // CLI-ready formatted line
+}
+```
+
+### `ModLintRuleInterface` (`src/ModLint/ModLintRuleInterface.php`)
+
+```php
+interface ModLintRuleInterface
+{
+    /** @return ModLintIssue[] */
+    public function check(ModLintContext $context): array;
+}
+```
+
+### `ModLinter` (`src/ModLint/ModLinter.php`)
+
+```php
+class ModLinter
+{
+    // Registry maps rule name strings to implementing class names.
+    // Add an entry here when creating a new rule class.
+    private const RULE_REGISTRY = ['AtelierTagRule' => AtelierTagRule::class, ...];
+
+    public static function createFromGame(Game $game): self;  // Builds linter from game's "rules" config; emits CLI warning for unknown names
+    public function addRule(ModLintRuleInterface $rule): self;  // Fluent; register an additional rule
+    /** @return ModLintIssue[] */
+    public function checkMod(ModLintContext $context): array;   // Run all rules against one mod
+}
+```
+
+### `Rules\AtelierTagRule` (`src/ModLint/Rules/AtelierTagRule.php`)
+
+```php
+// Namespace: Mistralys\VortexModExporter\ModLint\Rules
+class AtelierTagRule implements ModLintRuleInterface
+{
+    public const CATEGORY = 'Armour and Clothing';
+    public const TAG      = 'Atelier';
+
+    public function check(ModLintContext $context): array;
+    // Returns a TYPE_WARNING issue when a mod is in CATEGORY but lacks TAG.
 }
 ```
 

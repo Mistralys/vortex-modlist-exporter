@@ -30,6 +30,7 @@ class Game implements StringPrimaryRecordInterface
     public const KEY_DEF_LABEL = 'label';
     public const KEY_DEF_TAG_DEFINITIONS = 'tagDefinitions';
     public const KEY_DEF_OPTIONS = 'options';
+    public const KEY_DEF_RULES = 'rules';
 
     private ?ArrayDataCollection $data = null;
     private ?ArrayDataCollection $definition = null;
@@ -164,5 +165,77 @@ class Game implements StringPrimaryRecordInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Returns a case-insensitive lookup map of tag names defined in the game
+     * configuration file and the built-in canned tags.
+     *
+     * Keys are lower-cased tag names; values are the canonical names as written
+     * in the definition file. Used during export to normalise tag names extracted
+     * from Vortex mod names.
+     *
+     * @return array<string,string> lowercase => canonical tag name
+     */
+    public function getDefinedTagNameMap() : array
+    {
+        $tagDefs = $this->getDefinition()->getArray(self::KEY_DEF_TAG_DEFINITIONS);
+        $map = array();
+        foreach(array_keys($tagDefs) as $tagName) {
+            $tagName = (string)$tagName;
+            $map[strtolower($tagName)] = $tagName;
+        }
+        $map[strtolower(TagDefs::TAG_UNUSED)] = TagDefs::TAG_UNUSED;
+        $map[strtolower(TagDefs::TAG_UNUSED_TEMPORARILY)] = TagDefs::TAG_UNUSED_TEMPORARILY;
+        return $map;
+    }
+
+    /**
+     * Returns a map of tag name to the list of tag names it grants. When a mod
+     * carries a tag that has grants, the granted tags are automatically added to
+     * the mod during export as if the user had tagged the mod explicitly.
+     *
+     * @return array<string,string[]> tag name => granted tag names
+     */
+    public function getGrantsMap() : array
+    {
+        $tagDefs = $this->getDefinition()->getArray(self::KEY_DEF_TAG_DEFINITIONS);
+        $map = array();
+        foreach ($tagDefs as $tagName => $tagDef) {
+            $tagName = (string)$tagName;
+            if (is_array($tagDef) && !empty($tagDef['grants'])) {
+                $map[$tagName] = array_map('strval', (array)$tagDef['grants']);
+            }
+        }
+        return $map;
+    }
+
+    /**
+     * Returns the stored parameter for a specific mod/tag combination, or null
+     * when no parameter was recorded (e.g. the tag had no colon-delimited value).
+     *
+     * @param string $modName  Clean mod name (without bracket tags)
+     * @param string $tagName  Base tag name (e.g. "UPD")
+     * @return string|null
+     */
+    public function getModTagParam(string $modName, string $tagName) : ?string
+    {
+        $modData = $this->getModData();
+        $tagParams = $modData[$modName][Mod::KEY_TAG_PARAMS] ?? array();
+        return $tagParams[$tagName] ?? null;
+    }
+
+    /**
+     * Returns the raw rules configuration array from the game definition file.
+     * Each entry is an associative array with at least a `"name"` key matching
+     * the rule's registered name in {@see \Mistralys\VortexModExporter\ModLint\ModLinter}.
+     *
+     * Returns an empty array when no `rules` key is present.
+     *
+     * @return array<int,array<string,mixed>>
+     */
+    public function getRulesConfig() : array
+    {
+        return $this->getDefinition()->getArray(self::KEY_DEF_RULES);
     }
 }

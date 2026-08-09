@@ -27,6 +27,7 @@
     "roave/security-advisories": "dev-latest"
   },
   "scripts": {
+    "normalize-game-configs": "Mistralys\\VortexModExporter\\ComposerScripts::normalizeGameConfigs",
     "export-modlist": "Mistralys\\VortexModExporter\\ComposerScripts::exportModlist",
     "generate-docs": "Mistralys\\VortexModExporter\\ComposerScripts::generateDocs",
     "build": "Mistralys\\VortexModExporter\\ComposerScripts::build"

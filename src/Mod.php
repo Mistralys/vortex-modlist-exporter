@@ -25,6 +25,8 @@ class Mod implements StringPrimaryRecordInterface
     public const KEY_CATEGORY = 'category';
     public const KEY_ENDORSED = 'endorsed';
     public const KEY_TAGS = 'tags';
+    public const KEY_TAG_PARAMS = 'tagParams';
+    public const KEY_COMMENTS = 'comments';
 
     private Game $game;
     private string $name;
@@ -85,12 +87,47 @@ class Mod implements StringPrimaryRecordInterface
         return $this->data->getArray(self::KEY_TAGS);
     }
 
+    /**
+     * Returns the parameter map for tags that carry a parameter, e.g.
+     * a mod tagged [UPD:1.1] contributes ['UPD' => '1.1'].
+     *
+     * @return array<string,string> tagName => parameter
+     */
+    public function getTagParams() : array
+    {
+        return $this->data->getArray(self::KEY_TAG_PARAMS);
+    }
+
+    /**
+     * Returns the parameter value for a specific tag, or null when
+     * no parameter was stored for that tag.
+     *
+     * @param string $tagName
+     * @return string|null
+     */
+    public function getTagParam(string $tagName) : ?string
+    {
+        $params = $this->getTagParams();
+        return $params[$tagName] ?? null;
+    }
+
+    /**
+     * Returns comments extracted from parenthesised groups in the mod name,
+     * normalised as a sentence-cased string with trailing dots.
+     * Returns an empty string when no comments were recorded.
+     */
+    public function getComments() : string
+    {
+        return $this->data->getString(self::KEY_COMMENTS);
+    }
+
     public function getInheritedTags() : array
     {
         $tagDefs = $this->game->getTagDefs();
 
         $tags = array();
         foreach ($this->getTags() as $tagName) {
+            $tagName = $tagDefs->resolveTagName($tagName);
             if(!$tagDefs->idExists($tagName)) {
                 echo "Warning: Tag [$tagName] does not exist in tag definitions.\n";
                 continue;

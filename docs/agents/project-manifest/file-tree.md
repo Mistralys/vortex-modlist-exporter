@@ -29,10 +29,17 @@ vortex-modlist-exporter/
 │   ├── Mods.php                Typed collection of Mod instances for a game
 │   ├── TagDef.php              Domain model: a tag definition (described or auto-discovered)
 │   ├── TagDefs.php             Typed collection of TagDef instances for a game
-│   └── ComposerScripts/
-│       ├── ExportModlist.php         Export pipeline: reads Vortex backup → writes {gameId}-modlist.json
-│       ├── GenerateDocs.php          Doc pipeline: reads modlist JSON → writes {gameId}-mods.md + {gameId}-tags.md
-│       └── NormalizeGameConfigs.php  Normalization: sorts options, tag defs, requires, grants; strips empty requires
+│   ├── ComposerScripts/
+│   │   ├── ExportModlist.php         Export pipeline: reads Vortex backup → writes {gameId}-modlist.json
+│   │   ├── GenerateDocs.php          Doc pipeline: reads modlist JSON → writes {gameId}-mods.md + {gameId}-tags.md
+│   │   └── NormalizeGameConfigs.php  Normalization: sorts options, tag defs, requires, grants; strips empty requires
+│   └── ModLint/
+│       ├── ModLintContext.php         Value object: mod property snapshot passed to each rule
+│       ├── ModLintIssue.php           Value object: a single issue (type, mod name, message)
+│       ├── ModLintRuleInterface.php   Interface for mod lint rules; implement to add new checks
+│       ├── ModLinter.php              Runner: holds rules, checks one mod at a time, returns issues
+│       └── Rules/
+│           └── AtelierTagRule.php     Rule: warns when "Armour and Clothing" mod lacks the "Atelier" tag
 │
 ├── vendor/                     Composer-managed dependencies (not modified)
 │

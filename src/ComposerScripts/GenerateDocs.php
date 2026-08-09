@@ -9,11 +9,8 @@ use Mistralys\VortexModExporter\Game;
 use Mistralys\VortexModExporter\Games;
 use Mistralys\VortexModExporter\TagDef;
 use function AppUtils\parseURL;
-use function Mistralys\VortexModExporter\resolveTitle;
 use function Mistralys\VortexModExporter\slugify;
 use function Mistralys\VortexModExporter\titleify;
-use function Mistralys\VortexModExporter\writeGameModsReference;
-use function Mistralys\VortexModExporter\writeGameTagsReference;
 use const Mistralys\VortexModExporter\OUTPUT_FOLDER;
 
 class GenerateDocs
@@ -87,8 +84,11 @@ class GenerateDocs
             $mods = $game->getMods();
 
             foreach($modNames as $modName) {
+                $previousVersion = $tagDef->getPreviousVersion($modName);
+                $versionSuffix = $previousVersion !== null ? sprintf(' (prev. v%s)', $previousVersion) : '';
+
                 if(!$mods->idExists($modName)) {
-                    $lines[] = sprintf("- %s | WARNING: mod not found\n", $modName);
+                    $lines[] = sprintf("- %s%s | WARNING: mod not found\n", $modName, $versionSuffix);
                     continue;
                 }
 
@@ -96,11 +96,11 @@ class GenerateDocs
 
                 $homepage = $mod->getHomepage();
                 if (empty($homepage)) {
-                    $lines[] = sprintf("- %s\n", $modName);
+                    $lines[] = sprintf("- %s%s\n", $modName, $versionSuffix);
                     continue;
                 }
 
-                $lines[] = sprintf("- [%s](%s)\n", $modName, $mod->getHomepage());
+                $lines[] = sprintf("- [%s](%s)%s\n", $modName, $mod->getHomepage(), $versionSuffix);
             }
 
             $lines[] = "\n";
@@ -175,6 +175,11 @@ class GenerateDocs
             $tags = $mod->getInheritedTags();
             if (!empty($tags)) {
                 $lines[] = "Tags: `".implode("`, `", $tags)."`\n";
+            }
+
+            $comments = $mod->getComments();
+            if(!empty($comments)) {
+                $lines[] = "Notes: ".$comments."\n";
             }
 
             $lines[] = "\n";

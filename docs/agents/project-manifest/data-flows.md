@@ -44,16 +44,21 @@ ComposerScripts::exportModlist()
               │    - Skip mods with Unknown category (unless !ignoreUnknownCategory)
               │    - Strip [DateTag] brackets (if ignoreDateTags)
               │
-              ├─ Extracts clean mod name (strips all [Tag] brackets)
-              │    Resolves tag names to canonical casing via getDefinedTagNameMap()
-              │    Expands granted tags via getGrantsMap() (tags listed in `grants` are
-              │      added to the mod's tag list as if explicitly tagged by the user)
-              │    Resolves category name from categoriesData
-              │    Builds: mods{}, tags{}, categories{} maps
+              ├─ For each mod:
+              │    - Extracts clean mod name (strips all [Tag] brackets)
+              │    - Resolves tag names to canonical casing via getDefinedTagNameMap()
+              │    - Expands granted tags via getGrantsMap()
+              │    - Resolves category name from categoriesData
+              │    - Builds: mods{}, tags{}, categories{} maps
+              │    - Runs ModLinter::checkMod() (all registered rules) → collects ModLintIssue[]
               │
-              └─ Writes output/{gameId}-modlist.json via JSONFile::putData()
-                   Structure: { game, databaseDate, exportDate, categories, tags, mods }
-                   Optionally copies to GameOptions::getOutputFolder()
+              ├─ Writes output/{gameId}-modlist.json via JSONFile::putData()
+              │    Structure: { game, databaseDate, exportDate, categories, tags, mods }
+              │    Optionally copies to GameOptions::getOutputFolder()
+              │
+              └─ Outputs collected lint issues to the CLI grouped by severity
+                   Format: "  - LINT: N issue(s) found:" followed by per-issue lines
+                   Issue line format: "    [TYPE] Mod Name: message"
 ```
 
 ---
