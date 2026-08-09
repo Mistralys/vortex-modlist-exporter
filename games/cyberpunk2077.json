@@ -1,0 +1,352 @@
+{
+    "label": "Cyberpunk 2077",
+    "rules": [
+        {
+            "name": "AtelierTagRule"
+        }
+    ],
+    "options": {
+        "ignoreDateTags": true,
+        "ignoreUnknownCategory": true,
+        "includeTemporarilyUnusedMods": true,
+        "includeUnusedMods": true
+    },
+    "tagDefinitions": {
+        "AMM": {
+            "label": "Appearance Menu Mod",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/790",
+            "requires": [
+                "CET",
+                "Codeware"
+            ]
+        },
+        "ArchiveXL": {
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4198",
+            "requires": [
+                "Red4Ext"
+            ]
+        },
+        "Atelier": {
+            "label": "Virtual Atelier",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/2987",
+            "requires": [
+                "ArchiveXL",
+                "BrowserExt",
+                "Codeware",
+                "ModSettings",
+                "Red4Ext",
+                "RedScript"
+            ]
+        },
+        "BetterClothing": {
+            "description": "Mods to improve the clothing system in general."
+        },
+        "Body": {
+            "description": "Body-related mods to improve the skeleton, textures and more."
+        },
+        "BothV": {
+            "description": "This mod is compatible with both male and female characters.",
+            "grants": [
+                "FemV",
+                "MaleV"
+            ]
+        },
+        "BrowserExt": {
+            "label": "Browser Extension",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/10038",
+            "requires": [
+                "Codeware",
+                "Red4Ext",
+                "RedScript"
+            ]
+        },
+        "CCXL": {
+            "label": "Character Creation Additions",
+            "description": "Modding framework that is used to add custom slots (hairstyles, tattoos, eyes...) without replacing existing items."
+        },
+        "CET": {
+            "label": "Cyber Engine Tweaks",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/107"
+        },
+        "CPAL": {
+            "label": "Community Palette Project",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/10437"
+        },
+        "CPMDB": {
+            "label": "Cyberpunk Clothing Mod Database",
+            "description": "These mods are featured in the Cyberpunk clothing mod database project.",
+            "url": "https://aeonoftime.com/?article=2024-08-06-cyberpunk-clothing-mods&page=article"
+        },
+        "CarDealer": {
+            "label": "Virtual Car Dealer",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4454",
+            "requires": [
+                "ArchiveXL",
+                "BrowserExt",
+                "Codeware",
+                "Red4Ext",
+                "RedScript",
+                "TweakXL"
+            ]
+        },
+        "ChooseArchive": {
+            "description": "These mods require you to choose one of the `.archive` files after\ninstalling it to choose the variant to use."
+        },
+        "Codeware": {
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/7780",
+            "requires": [
+                "Red4Ext"
+            ]
+        },
+        "Console": {
+            "description": "These mods add functionality to the CET console, or are primarily\nused through the console."
+        },
+        "CookedApps": {
+            "label": "Cooked Apps Nulled",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/3051"
+        },
+        "Core": {
+            "label": "Core mods",
+            "description": "Absolute minimum core mods needed by other mods to work."
+        },
+        "Core2": {
+            "label": "Essential mods",
+            "description": "Essential mods that you do not want to play without."
+        },
+        "Core3": {
+            "label": "Important mods",
+            "description": "Important mods, but that you can live without."
+        },
+        "CustomMod": {
+            "description": "Custom mods that have no online source."
+        },
+        "DQC": {
+            "label": "Deceptious Quest Core",
+            "description": "Modding framework by Decptious that is used to add custom quests.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/7831"
+        },
+        "EQEX": {
+            "label": "Equipment-EX",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/6945",
+            "requires": [
+                "ArchiveXL",
+                "Codeware",
+                "Red4Ext",
+                "RedScript",
+                "TweakXL"
+            ]
+        },
+        "FallbackInstaller": {
+            "description": "This mod is known to have caused Vortex to use its fallback installer."
+        },
+        "FemV": {
+            "description": "This mod is compatible with female characters."
+        },
+        "Fixes": {
+            "description": "Mods that fix bugs or issues in the game."
+        },
+        "GarmentSupport": {
+            "description": "The items added by this mod come with garment support, which enables automatic tucking and adjustments."
+        },
+        "Hair": {
+            "description": "Hair-related mods to improve and/or add hair, textures and more."
+        },
+        "HiRes": {
+            "label": "High Resolution Textures",
+            "description": "High resolution textures for different aspects of the game, from environment textures to NPCs."
+        },
+        "Hotkey": {
+            "description": "This mod requires one or more hotkeys to be defined to access it."
+        },
+        "InputLoader": {
+            "label": "Input Loader",
+            "description": "Modding framework used to merge all R6 XML input files.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4575",
+            "requires": [
+                "Red4Ext"
+            ]
+        },
+        "ItemCodes": {
+            "description": "Item codes for the items added by this mod."
+        },
+        "JADE": {
+            "label": "Johnson's Amazing Dangles Emporium",
+            "description": "Modding framework to enable clothing item physics.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/15265"
+        },
+        "MIBL": {
+            "label": "Microblend Resource",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4571"
+        },
+        "MPTL": {
+            "label": "Military Palette Texture Library",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/16356",
+            "requires": [
+                "ArchiveXL",
+                "Red4Ext",
+                "TweakXL"
+            ]
+        },
+        "MaleV": {
+            "description": "This mod is compatible with male characters."
+        },
+        "ManualDL": {
+            "label": "Manual Download",
+            "description": "This mod requires you to download the files manually - the mod manager download option is not available."
+        },
+        "MatEX": {
+            "label": "Multi-Material extender",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/5570"
+        },
+        "ModSettings": {
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4885",
+            "requires": [
+                "ArchiveXL",
+                "Red4Ext",
+                "RedScript"
+            ]
+        },
+        "NCI": {
+            "label": "Night City Interactions",
+            "description": "The core mod for the Night City Interactions mods & addons.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/5519",
+            "requires": [
+                "ArchiveXL",
+                "Codeware",
+                "NativeSettings",
+                "Red4Ext",
+                "TweakXL"
+            ]
+        },
+        "NEW": {
+            "description": "Newly added mod that has not been tested in the game yet."
+        },
+        "NIF": {
+            "label": "Native Interactions Framework",
+            "description": "Framework that allows for the placement of interactions such as sitting, sleeping, drinking, showering and more.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/21422",
+            "requires": [
+                "ArchiveXL",
+                "CET",
+                "Codeware",
+                "Red4Ext",
+                "RedScript"
+            ]
+        },
+        "NPC": {
+            "description": "Mods related to NPCs."
+        },
+        "NativeSettings": {
+            "label": "Native Settings UI",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/3518",
+            "requires": [
+                "CET"
+            ]
+        },
+        "NoPaperBags": {
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/8387",
+            "requires": [
+                "CET"
+            ]
+        },
+        "NoStore": {
+            "label": "No Store",
+            "description": "This mod does not have a virtual atelier to buy items from."
+        },
+        "PMU": {
+            "label": "Photo Mode Unlocker",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4319",
+            "requires": [
+                "ArchiveXL",
+                "Red4Ext",
+                "TweakXL"
+            ]
+        },
+        "Photos": {
+            "description": "Mods around the photo mode, from enhancements to pose packs and more."
+        },
+        "Physics": {
+            "label": "Physics-enabled items"
+        },
+        "Poses": {
+            "description": "Mods that add pose packs for the photo mode or to use with AMM."
+        },
+        "Quest": {
+            "description": "Mods that add or modify quests."
+        },
+        "ROCC": {
+            "label": "Rosa's Clothes Core",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/25291"
+        },
+        "ReadNotes": {
+            "description": "It is recommended to read the mod's official description,\nas there are important usage instructions there."
+        },
+        "Red4Ext": {
+            "label": "RedScript 4 Extender",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/2380"
+        },
+        "RedData": {
+            "label": "Red Data",
+            "description": "Modding framework to work with custom data files like JSON files.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/14139",
+            "requires": [
+                "Red4Ext",
+                "RedScript"
+            ]
+        },
+        "RedFS": {
+            "label": "Red File System",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/13378",
+            "requires": [
+                "Red4Ext",
+                "RedScript"
+            ]
+        },
+        "RedScript": {
+            "label": "Red engine scripting language"
+        },
+        "SeparateV": {
+            "description": "This mod is compatible with either male or female characters with separate downloadable files.",
+            "grants": [
+                "FemV",
+                "MaleV"
+            ]
+        },
+        "Store": {
+            "description": "These are virtual atelier mods that add clothing items."
+        },
+        "Testing": {
+            "description": "This mod is pending tests."
+        },
+        "TexOverride": {
+            "label": "Material & Texture Override",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/5266"
+        },
+        "TweakXL": {
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/4197",
+            "requires": [
+                "Red4Ext"
+            ]
+        },
+        "UPD": {
+            "label": "Updated mod",
+            "description": "This mod has been updated to a newer version since the last release, and must be verified."
+        },
+        "UniqueEyes": {
+            "label": "Unique Eyes",
+            "url": "https://nexusmods.com/cyberpunk2077/mods/1937"
+        },
+        "VMF": {
+            "label": "Vehicle Manufacturer Fix",
+            "description": "For custom cars: A small script file that enables the scanner icon to display correctly.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/28744"
+        },
+        "Vanilla": {
+            "description": "This mod is compatible with the vanilla game."
+        },
+        "WaitForUpdate": {
+            "label": "Wait for update",
+            "description": "This mod is known to be broken in the current game version, and should not be used until it is updated."
+        }
+    }
+}
