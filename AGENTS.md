@@ -49,7 +49,7 @@ When you make a code change, update the corresponding manifest documents **in th
 | New output file format introduced | `constraints.md`, `data-flows.md`, `file-tree.md` |
 | New tag inheritance or mod-naming rule | `constraints.md` |
 | New configuration constant added | `constraints.md` |
-| New lint rule added to `src/ModLint/Rules/` | `api-surface.md`, register in `ModLinter::createDefault()` |
+| New lint rule added to `src/ModLint/Rules/` | `api-surface.md`, register in `ModLinter::RULE_REGISTRY` |
 
 ---
 

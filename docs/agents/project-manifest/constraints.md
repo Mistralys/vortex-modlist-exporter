@@ -12,6 +12,7 @@
 - The filename base name **must exactly match** the game ID used by Vortex internally (lowercase, no spaces, e.g. `cyberpunk2077`).
 - Files placed in `games/examples/` are ignored by the auto-discovery logic (that directory is not scanned).
 - Minimum required field: `"label"` (human-readable game name). All other keys are optional.
+- The optional `"rules"` array selects which mod lint rules run during export for this game. Each entry is an object with a `"name"` key matching a registered name in `ModLinter::RULE_REGISTRY`. Example: `{ "name": "AtelierTagRule" }`. Games with no `"rules"` key run no lint checks. Unknown rule names emit a CLI warning and are skipped.
 
 ## Vortex Backup File
 
