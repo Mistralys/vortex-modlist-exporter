@@ -344,6 +344,9 @@
         "Vanilla": {
             "description": "This mod is compatible with the vanilla game."
         },
+        "Variants": {
+            "description": "This mod has multiple file variants to choose from."
+        },
         "WaitForUpdate": {
             "label": "Wait for update",
             "description": "This mod is known to be broken in the current game version, and should not be used until it is updated."
