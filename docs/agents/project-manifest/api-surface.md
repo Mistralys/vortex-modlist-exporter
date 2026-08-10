@@ -35,6 +35,30 @@ class ExportModlist
 class GenerateDocs
 {
     public function generate(): void;
+
+    private function writeGameReadme(Game $game): void;
+
+    // Tags: writes index + per-tag files under output/{gameId}/tags/
+    private function writeGameTagsReference(Game $game): void;
+    private function writeTagsIndex(Game $game, array $tagDefs, int $totalMods, int $totalTags, int $tagsWithMods): void;
+    private function writeTagFile(Game $game, TagDef $tagDef, FolderInfo $tagsFolder): void;
+
+    // Mods: writes index + per-category files under output/{gameId}/mods/
+    private function writeGameModsReference(Game $game): void;
+    private function writeModsIndex(Game $game, array $cats): void;
+    private function writeCategoryFile(Game $game, string $cat, array $mods, FolderInfo $modsFolder): void;
+
+    // Helpers
+    private function resolveTitle(TagDef $tag): string;
+    private function resolveTimestampHeader(Game $game): string;
+    private function renderTagModLine(Game $game, TagDef $tagDef, string $modName): array;
+    private function resolveTagLink(Game $game, string $tagName): string;
+    private function resolveRequiredBy(Game $game, TagDef $tagDef): array;
+    private function resolveGenderCompatibility(Mod $mod): ?string;
+    private function filterDisplayTags(array $tags): array;
+    private function resolveCommonTags(array $mods): array;
+
+    private const GENDER_TAGS = ['FemV', 'MaleV', 'BothV', 'SeparateV'];
 }
 ```
 

@@ -52,7 +52,7 @@ ComposerScripts::exportModlist()
               │    - Builds: mods{}, tags{}, categories{} maps
               │    - Runs ModLinter::checkMod() (all registered rules) → collects ModLintIssue[]
               │
-              ├─ Writes output/{gameId}-modlist.json via JSONFile::putData()
+              ├─ Writes output/{gameId}/modlist.json via JSONFile::putData()
               │    Structure: { game, databaseDate, exportDate, categories, tags, mods }
               │    Optionally copies to GameOptions::getOutputFolder()
               │
@@ -67,35 +67,50 @@ ComposerScripts::exportModlist()
 
 ### 3a. Tags Reference
 
+Output is split into an index file plus one file per tag:
+
 ```
-ComposerScripts::generateDocs()
-  └─ GenerateDocs::generate()
-       └─ For each Game:
-            GenerateDocs::writeGameTagsReference(Game)
-              ├─ Game::getTagDefs() → TagDefs (lazy-loaded from modlist.json + game config)
-              │    TagDefs registers:
-              │      1. Explicit tag definitions from games/{gameId}.json
-              │      2. Canned built-in tags (Unused, UnusedTemp)
-              │      3. Auto-discovered tags from Game::getTagNames()
-              │      4. Associates mod names via TagDefs::registerTagMods()
-              │
-              ├─ Builds Markdown: TOC + per-tag section with description, URL, mod list
-              │    Links to mod homepages if available via Mod::getHomepage()
-              │
-              └─ Writes output/{gameId}-tags.md
-                   Optionally copies to GameOptions::getOutputFolder()
+GenerateDocs::writeGameTagsReference(Game)
+  ├─ Creates output/{gameId}/tags/ directory
+  ├─ For each TagDef with mods:
+  │    writeTagFile(Game, TagDef, tagsFolder)
+  │      ├─ Separates mods into "Active mods" and "Missing mods" sections
+  │      ├─ Shows tag requires as links to sibling tag pages (resolveTagLink)
+  │      ├─ Shows "Required by" reverse-dependency links (resolveRequiredBy)
+  │      └─ Writes output/{gameId}/tags/{tag-slug}.md
+  │
+  └─ writeTagsIndex(Game, tagDefs, stats)
+       ├─ Renders stats block (total mods, total tags, tags with mods)
+       ├─ Renders table: Tag | Description | Mods count
+       │    Each tag name links to its dedicated file
+       └─ Writes output/{gameId}/tags.md
+            Optionally copies to GameOptions::getOutputFolder()
 ```
 
 ### 3b. Mods Reference
 
+Output is split into an index file plus one file per category:
+
 ```
 GenerateDocs::writeGameModsReference(Game)
-  ├─ Game::getMods() → Mods (lazy-loaded from modlist.json)
   ├─ Groups mods by category (Mod::getCategory())
-  ├─ Builds Markdown: category overview + per-mod detail section
-  │    Per mod: category, homepage, inherited tags (Mod::getInheritedTags())
-  └─ Writes output/{gameId}-mods.md
-       Optionally copies to GameOptions::getOutputFolder()
+  ├─ Creates output/{gameId}/mods/ directory
+  ├─ For each category:
+  │    writeCategoryFile(Game, category, mods, modsFolder)
+  │      ├─ Full mod details: category, homepage, tags, notes
+  │      ├─ Endorsed mods show ⭐ badge in heading
+  │      ├─ Gender compatibility line (FemV/MaleV/BothV/SeparateV)
+  │      │    extracted from tags into dedicated "Compatibility:" field
+  │      ├─ Gender tags filtered from the Tags: line (filterDisplayTags)
+  │      └─ Writes output/{gameId}/mods/{category-slug}.md
+  │
+  └─ writeModsIndex(Game, categories)
+       ├─ Renders stats block (total mods, category count)
+       ├─ Renders table: Category | Mods | Common tags
+       │    Each category links to its dedicated file
+       │    Common tags: top 5 tags appearing in ≥20% of the category's mods
+       └─ Writes output/{gameId}/mods.md
+            Optionally copies to GameOptions::getOutputFolder()
 ```
 
 ---

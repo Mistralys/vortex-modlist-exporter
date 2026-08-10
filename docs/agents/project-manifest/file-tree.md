@@ -13,9 +13,13 @@ vortex-modlist-exporter/
 │   └── examples/               Example game config files (reference only, not processed)
 │
 ├── output/                     Generated output files (git-tracked examples; live files written here)
-│   ├── {gameId}-modlist.json   Structured mod list (output of export-modlist)
-│   ├── {gameId}-mods.md        Human-readable mod reference by category (output of generate-docs)
-│   ├── {gameId}-tags.md        Human-readable tag reference with mod lists (output of generate-docs)
+│   ├── {gameId}/               Per-game output directory (one per configured game)
+│   │   ├── README.md           Game index with stats and links to all resources
+│   │   ├── modlist.json        Structured mod list (output of export-modlist)
+│   │   ├── mods.md             Mod reference index with stats and category links (output of generate-docs)
+│   │   ├── tags.md             Tag reference index with stats and tag links (output of generate-docs)
+│   │   ├── mods/               One Markdown file per mod category (e.g. appearance.md, gameplay.md)
+│   │   └── tags/               One Markdown file per tag (e.g. archivexl.md, atelier---virtual-atelier.md)
 │   ├── _readme.md              Describes the output files
 │   └── examples/               Example output files checked into the repository
 │

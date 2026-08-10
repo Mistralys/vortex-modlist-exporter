@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mistralys\VortexModExporter\ComposerScripts;
 
+use AppUtils\FileHelper\FolderInfo;
 use AppUtils\FileHelper\JSONFile;
 use AppUtils\Microtime;
 use DateTime;
@@ -104,6 +105,7 @@ class ExportModlist
             $keepTags = array();
             $modTagParams = array();
             $cleanName = $name;
+            $comments = '';
 
             if (!empty($matches[1]))
             {
@@ -117,6 +119,20 @@ class ExportModlist
 
                 while(str_contains($cleanName, '  ')) {
                     $cleanName = str_replace('  ', ' ', $cleanName);
+                }
+
+                // Strip parenthetical comments before recording the name in tags so that
+                // the tag list and the mods object use the same key.
+                $comments = $this->extractParenComments($cleanName);
+                if($comments !== '') {
+                    preg_match_all('/\([^)]+\)/', $cleanName, $parenMatches);
+                    foreach ($parenMatches[0] as $match) {
+                        $cleanName = str_replace($match, '', $cleanName);
+                    }
+                    $cleanName = trim($cleanName);
+                    while(str_contains($cleanName, '  ')) {
+                        $cleanName = str_replace('  ', ' ', $cleanName);
+                    }
                 }
 
                 $modTags = $matches[1];
@@ -181,16 +197,18 @@ class ExportModlist
                 }
             }
 
-            // Extract parenthesised notes from the mod name and collect them as comments.
-            $comments = $this->extractParenComments($cleanName);
-            if($comments !== '') {
-                preg_match_all('/\([^)]+\)/', $cleanName, $parenMatches);
-                foreach ($parenMatches[0] as $match) {
-                    $cleanName = str_replace($match, '', $cleanName);
-                }
-                $cleanName = trim($cleanName);
-                while(str_contains($cleanName, '  ')) {
-                    $cleanName = str_replace('  ', ' ', $cleanName);
+            // For mods without tags, parenthetical comments have not been stripped yet.
+            if(empty($matches[1])) {
+                $comments = $this->extractParenComments($cleanName);
+                if($comments !== '') {
+                    preg_match_all('/\([^)]+\)/', $cleanName, $parenMatches);
+                    foreach ($parenMatches[0] as $match) {
+                        $cleanName = str_replace($match, '', $cleanName);
+                    }
+                    $cleanName = trim($cleanName);
+                    while(str_contains($cleanName, '  ')) {
+                        $cleanName = str_replace('  ', ' ', $cleanName);
+                    }
                 }
             }
 
@@ -247,9 +265,10 @@ class ExportModlist
 
         uksort($mods, 'strnatcasecmp');
 
-        $fileName = $gameID.'-modlist.json';
+        $gameFolder = FolderInfo::factory(OUTPUT_FOLDER.'/'.$gameID)->create();
+        $fileName = 'modlist.json';
 
-        $file = JSONFile::factory(OUTPUT_FOLDER . '/'.$fileName)
+        $file = JSONFile::factory($gameFolder.'/'.$fileName)
             ->setEscapeSlashes(false)
             ->setTrailingNewline(true)
             ->setPrettyPrint(true)

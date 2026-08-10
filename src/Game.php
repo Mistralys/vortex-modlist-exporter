@@ -40,7 +40,7 @@ class Game implements StringPrimaryRecordInterface
     public function __construct(JSONFile $definitionFile)
     {
         $this->definitionFile = $definitionFile;
-        $this->dataFile = JSONFile::factory(OUTPUT_FOLDER.'/'.$this->getVortexID().'-modlist.json');
+        $this->dataFile = JSONFile::factory(OUTPUT_FOLDER.'/'.$this->getVortexID().'/modlist.json');
     }
 
     public function getID(): string
