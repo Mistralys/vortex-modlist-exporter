@@ -62,7 +62,7 @@
         },
         "CCXL": {
             "label": "Character Creation Additions",
-            "description": "Modding framework that is used to add custom slots (hairstyles, tattoos, eyes...) without replacing existing items."
+            "description": "Modding framework that is used to add custom slots - hairstyles, tattoos, eyes - without replacing existing items."
         },
         "CET": {
             "label": "Cyber Engine Tweaks",
@@ -346,6 +346,19 @@
         },
         "Variants": {
             "description": "This mod has multiple file variants to choose from."
+        },
+        "VendorsXL": {
+            "label": "Vendors XL",
+            "description": "Modding framework that allows for the addition of new vendors and shops.",
+            "url": "https://www.nexusmods.com/cyberpunk2077/mods/19679",
+            "requires": [
+                "ArchiveXL",
+                "Codeware",
+                "DQC",
+                "Red4Ext",
+                "RedScript",
+                "TweakXL"
+            ]
         },
         "WaitForUpdate": {
             "label": "Wait for update",
